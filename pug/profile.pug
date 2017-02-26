@@ -1,0 +1,16 @@
+//- File which is rendered for profile requests
+
+include mixins.pug
+
+doctype html
+html
+  +pageHead("Nightlife profile")
+
+  body
+    +layoutBase()
+      +appTitle()
+      +topMenu("profile")
+      div#profile-app
+      +appFooter()
+
+    script(type="text/javascript" src="/build/bundle.js" charset="utf-8")

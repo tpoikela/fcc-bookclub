@@ -1,0 +1,32 @@
+//- File which is for /about requests.
+
+include mixins.pug
+
+doctype html
+html
+  +pageHead("About")
+
+  body
+    +layoutBase()
+      +appTitle()
+      +topMenu("about")
+
+      h2 About
+
+      p
+        | Nightlife coordination app for 
+        a(href="http://www.freecodecamp.com") FreeCodeCamp 
+        | fullstack projects.
+      p
+        | You can search for clubs and restaurants anywhere in the world, 
+        | signup to attend a club and see who else is going tonight, and where.
+      p
+        | You can access the full source code of the project from 
+        a(href="http://www.github/tpoikela/fcc-nightlife") GitHub.
+      p
+        | This page uses 
+        a(href="https:/www.yelp.com/developers") Yelp API. 
+        | Nice tutorial how to use the API can be found from 
+        a(href="https://arian.io/how-to-use-yelps-api-with-node") How to use Yelp's API with Node
+
+      +appFooter()

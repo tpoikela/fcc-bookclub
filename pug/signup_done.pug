@@ -1,0 +1,30 @@
+// Served after signup
+// ARGS: ok: true|false, based on success of signup
+//       name: Registered/attempted username
+
+include mixins.pug
+
+doctype html
+html
+  +pageHead("Signup OK")
+
+  body
+
+    +layoutBase()
+      +appTitle()
+      +topMenu("signup_done")
+
+    +layoutBase()
+      - if (ok) {
+        p.text-success Registered user #{name} successfully.
+        p
+          | Click 
+          a(href='/login') here 
+          | to login.
+      - } else {
+        p.text-danger
+          Username #{name} already taken. Try again.
+      - }
+
+    +layoutBase()
+      +appFooter()

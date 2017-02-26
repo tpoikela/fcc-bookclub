@@ -1,0 +1,19 @@
+//- Main page of the app. Rendered HTML is decided by user login status
+
+include mixins.pug
+
+doctype html
+html
+  +pageHead("Home")
+
+  body
+    +layoutBase()
+      +appTitle()
+      +topMenu("index")
+
+      p
+        | Join a community of thousands of users and find new books to trade.
+      div#main-app
+      +appFooter()
+
+    script(type="text/javascript" src="/build/bundle.js" charset="utf-8")
