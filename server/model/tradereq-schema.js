@@ -15,18 +15,21 @@ var TradeReqSchema = new Schema({
         type: Date
     },
     requestedBook: {
-        type: String
+        type: String,
+        required: true
     },
     tradedBook: {
         type: String
     },
     fromUser: {
         type: ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     toUser: {
         type: ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
 
     tradeStatus: {
@@ -37,14 +40,37 @@ var TradeReqSchema = new Schema({
 {collection: 'tradereqs'}
 );
 
+const TradeReq = mongoose.model('TradeReq', TradeReqSchema);
+
 TradeReqSchema.statics.statusTypes = ['PENDING', 'ACCEPTED', 'REJECTED'];
 
 //---------------------------------------------------------------------------
 // STATIC METHODS
 //---------------------------------------------------------------------------
 
+TradeReqSchema.statics.create = function(obj, cb) {
+    var tradeReq = new TradeReq();
+    tradeReq.from = obj.from;
+    tradeReq.to = obj.to;
+    tradeReq.requestedBook = obj.book;
+    tradeReq.save( err => {
+        cb(err);
+    });
+};
+
 //---------------------------------------------------------------------------
 // INSTANCE METHODS
 //---------------------------------------------------------------------------
 
-module.exports = mongoose.model('TradeReq', TradeReqSchema);
+/* Updates the object information.*/
+TradeReq.methods.update = function(obj, cb) {
+    var setVals = {$set: obj};
+    TradeReq.update({_id: this._id}, setVals, {}, (err) => {
+        if (err) {cb(err);}
+        else {
+            cb(null);
+        }
+    });
+};
+
+module.exports = TradeReq;

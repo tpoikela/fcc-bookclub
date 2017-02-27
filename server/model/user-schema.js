@@ -86,7 +86,7 @@ UserSchema.statics.getUserID = function(username, cb) {
 
 /* Updates the user info with given object. Note that obj must match the user
  * schema.*/
-UserSchema.methods.updateInfo = function(obj, cb) {
+UserSchema.methods.update = function(obj, cb) {
     var setVals = {$set: obj};
     this.model('User').update({_id: this._id}, setVals, {}, (err) => {
         if (err) {cb(err);}
