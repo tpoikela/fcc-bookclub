@@ -16,7 +16,11 @@ describe('TradeReqSchema', function() {
 
     it('has two users and a book requested', function() {
         tradeReq.validateSync();
-
+        expect(tradeReq.errors.fromUser).to.exist;
+        expect(tradeReq.errors.toUser).to.exist;
+        expect(tradeReq.errors.requestedBook).to.exist;
     });
+
+
 
 });
