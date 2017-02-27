@@ -40,21 +40,22 @@ var TradeReqSchema = new Schema({
 {collection: 'tradereqs'}
 );
 
-const TradeReq = mongoose.model('TradeReq', TradeReqSchema);
-
-TradeReqSchema.statics.statusTypes = ['PENDING', 'ACCEPTED', 'REJECTED'];
+// TradeReqSchema.statics.statusTypes = ['PENDING', 'ACCEPTED', 'REJECTED'];
 
 //---------------------------------------------------------------------------
 // STATIC METHODS
 //---------------------------------------------------------------------------
 
-TradeReqSchema.statics.create = function(obj, cb) {
-    var tradeReq = new TradeReq();
-    tradeReq.from = obj.from;
-    tradeReq.to = obj.to;
-    tradeReq.requestedBook = obj.book;
-    tradeReq.save( err => {
-        cb(err);
+/* Creates one trade request into the database.*/
+TradeReqSchema.statics.createReq = function(obj, cb) {
+    var TradeReq = this.model('TradeReq');
+    var tradeReq = new TradeReq(
+        {fromUser: obj.from, toUser: obj.to, requestedBook: obj.book}
+    );
+
+    tradeReq.save( (err, data) => {
+        if (err) {cb(err);}
+        else {cb(null, data);}
     });
 };
 
@@ -63,9 +64,9 @@ TradeReqSchema.statics.create = function(obj, cb) {
 //---------------------------------------------------------------------------
 
 /* Updates the object information.*/
-TradeReq.methods.update = function(obj, cb) {
+TradeReqSchema.methods.update = function(obj, cb) {
     var setVals = {$set: obj};
-    TradeReq.update({_id: this._id}, setVals, {}, (err) => {
+    this.model('TradeReq').update({_id: this._id}, setVals, {}, err => {
         if (err) {cb(err);}
         else {
             cb(null);
@@ -73,4 +74,4 @@ TradeReq.methods.update = function(obj, cb) {
     });
 };
 
-module.exports = TradeReq;
+ module.exports = mongoose.model('TradeReq', TradeReqSchema);
