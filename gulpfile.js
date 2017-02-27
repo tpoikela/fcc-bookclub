@@ -10,7 +10,7 @@ var nodemon = require('gulp-nodemon');
 
 var spawn = require('child_process').spawn;
 
-var jsxDir = './app/jsx';
+var jsxDir = './client/jsx';
 
 var port = process.env.PORT || 7070;
 
@@ -36,17 +36,15 @@ gulp.task('build-js', function() {
         .pipe(gulp.dest('build'));
 });
 
-/*
 gulp.task('build-test', function() {
     return browserify({entries:
-        ['./app/common/ajax-functions.js', 'tests/ajax-functions.js'],
+        ['./client/common/ajax-functions.js', 'test/ajaxFunctionsTest.js'],
         extensions: ['.js'], debug: true})
         .transform(babelify)
         .bundle()
         .pipe(source('./bundleTests.js'))
         .pipe(gulp.dest('build'));
 });
-*/
 
 gulp.task('build-sass', function() {
 	return gulp.src('./scss/*.scss')
