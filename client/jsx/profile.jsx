@@ -5,15 +5,16 @@ var React = require('react');
 
 const appUrl = window.location.origin;
 const ajax = require('../common/ajax-functions.js');
-const UserController = require('../controllers/userController.client');
-const ProfileVenueItem = require('./prof-item.jsx');
+// const UserController = require('../controllers/userController.client');
+// const ProfileVenueItem = require('./prof-item.jsx');
 
 /** This component is used at the profile page of a user.*/
 class ProfileTop extends React.Component {
 
     constructor(props) {
         super(props);
-        this.userCtrl = new UserController(appUrl);
+        // this.userCtrl = new UserController(appUrl);
+        this.userCtrl = null;
 
         this.onRemoveClick = this.onRemoveClick.bind(this);
 
@@ -90,6 +91,7 @@ class ProfileTop extends React.Component {
         // Generate the list of venues here
         var venueHtml = null;
         var venueText = <p>You're not going to any venues.</p>;
+        /*
         if (venues) {
             venueHtml = venues.map( (item, index) => {
                 return (<ProfileVenueItem key={index}
@@ -106,7 +108,7 @@ class ProfileTop extends React.Component {
                 </div>);
             }
         }
-
+        */
 
         return (
             <div className='profile-info'>
