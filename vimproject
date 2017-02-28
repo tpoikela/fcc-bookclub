@@ -1,0 +1,103 @@
+fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
+ .eslintignore
+ server.js
+ . # pragma keep
+ build=build {
+  main.css
+  bundle.js
+ }
+ .eslintrc
+ package.json
+ .gitignore
+ gulpfile.js
+ .git=.git {
+  hooks=hooks {
+   pre-applypatch.sample
+   pre-rebase.sample
+   commit-msg.sample
+   applypatch-msg.sample
+   pre-commit.sample
+   pre-push.sample
+   prepare-commit-msg.sample
+   update.sample
+   post-update.sample
+  }
+  logs=logs {
+   HEAD
+  }
+  objects=objects {
+  }
+  FETCH_HEAD
+  config
+  refs=refs {
+  }
+  ORIG_HEAD
+  description
+  COMMIT_EDITMSG
+  info=info {
+   exclude
+  }
+  index
+  packed-refs
+  HEAD
+  branches=branches {
+  }
+ }
+ test=test {
+  tradeReqSchemaTest.js
+  userSchemaTest.js
+  .eslintrc
+  ajaxFunctionsTest.js
+ }
+ .env
+ README.md
+ pug=pug {
+  signup_done.pug
+  login.pug
+  index.pug
+  mixins.pug
+  about.pug
+  profile.pug
+  signup.pug
+ }
+ .babelrc
+ public=public {
+ }
+ .tern-project
+ dbTest.js
+ scss=scss {
+  main.scss
+ }
+ testem.json
+ client=client {
+  jsx=jsx {
+   top.jsx
+   app.jsx
+   profile.jsx
+  }
+  common=common {
+   ajax-functions.js
+  }
+ }
+ server=server {
+  config=config {
+   passport.js
+  }
+  routes=routes {
+   routes.js
+  }
+  ctrl=ctrl {
+   userController.server.js
+  }
+  model=model {
+   user-schema.js
+   tradereq-schema.js
+  }
+  common=common {
+   hash-password.js
+   validation.js
+  }
+ }
+ vimproject
+ LICENSE
+}
