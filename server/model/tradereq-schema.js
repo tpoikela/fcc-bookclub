@@ -49,8 +49,10 @@ var TradeReqSchema = new Schema({
 /* Creates one trade request into the database.*/
 TradeReqSchema.statics.createReq = function(obj, cb) {
     var TradeReq = this.model('TradeReq');
+    var date = new Date();
     var tradeReq = new TradeReq(
-        {fromUser: obj.from, toUser: obj.to, requestedBook: obj.book}
+        {fromUser: obj.from, toUser: obj.to, requestedBook: obj.book,
+            tradeStatus: 'PENDING', dateRequested: date}
     );
 
     tradeReq.save( (err, data) => {
@@ -89,4 +91,10 @@ TradeReqSchema.methods.remove = function(cb) {
     TradeReq.removeByID(id, cb);
 };
 
- module.exports = mongoose.model('TradeReq', TradeReqSchema);
+/* Rejects the trade request. */
+TradeReqSchema.methods.reject = function(cb) {
+    var obj = {tradeStatus: 'REJECTED', dateResponded: new Date()};
+    this.update(obj, cb);
+};
+
+module.exports = mongoose.model('TradeReq', TradeReqSchema);
