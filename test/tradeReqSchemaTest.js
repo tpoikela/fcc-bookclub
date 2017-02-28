@@ -94,7 +94,8 @@ describe('TradeReqSchema', function() {
 
                 TradeReq.findOne({_id: data._id}, (err, foundData) => {
                     if (err) {throw new Error(err);}
-                    expect(foundData, 'Removed data should not be found').to.be.null;
+                    expect(foundData,
+                        'Removed data should not be found').to.be.null;
                     done();
                 });
 
@@ -103,4 +104,29 @@ describe('TradeReqSchema', function() {
 
     });
 
+    it('can be rejected by a user', function(done) {
+        createDummyReq( data => {
+            data.reject( err => {
+                if (err) {throw new Error(err);}
+                else {
+                    TradeReq.findOne({_id: data._id}, (err, foundData) => {
+                        if (err) {throw new Error(err);}
+                        expect(foundData.tradeStatus).to.be.equal('REJECTED');
+                        done();
+                    });
+                }
+            });
+        });
+    });
+
 });
+
+function createDummyReq(cb) {
+    var obj = createTradeReq();
+    TradeReq.createReq(obj, (err, data) => {
+        if (err) {throw new Error(err);}
+        else {
+            cb(data);
+        }
+    });
+}
