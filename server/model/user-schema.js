@@ -94,4 +94,17 @@ UserSchema.methods.update = function(obj, cb) {
     });
 };
 
+/* Adds one book for the user.*/
+UserSchema.methods.addBook = function(book, cb) {
+    var list = this.bookList;
+    list.push(book);
+    var updateObj = {bookList: list};
+    this.update(updateObj, cb);
+};
+
+
+UserSchema.methods.removeBook = function(book, cb) {
+
+};
+
 module.exports = mongoose.model('User', UserSchema);
