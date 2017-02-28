@@ -59,6 +59,15 @@ TradeReqSchema.statics.createReq = function(obj, cb) {
     });
 };
 
+/* Removes a trade request by ID from the DB. */
+TradeReqSchema.statics.removeByID = function(id, cb) {
+    var TradeReq = this.model('TradeReq');
+    TradeReq.remove({_id: id}, err => {
+        if (err) {cb(err);}
+        else {cb(null);}
+    });
+};
+
 //---------------------------------------------------------------------------
 // INSTANCE METHODS
 //---------------------------------------------------------------------------
@@ -72,6 +81,12 @@ TradeReqSchema.methods.update = function(obj, cb) {
             cb(null);
         }
     });
+};
+
+TradeReqSchema.methods.remove = function(cb) {
+    var TradeReq = this.model('TradeReq');
+    var id = this._id;
+    TradeReq.removeByID(id, cb);
 };
 
  module.exports = mongoose.model('TradeReq', TradeReqSchema);

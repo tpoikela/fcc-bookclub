@@ -4,8 +4,8 @@ const expect = require('chai').expect;
 const TradeReq = require('../server/model/tradereq-schema');
 
 var testDbURI = 'mongodb://localhost:27017/bookwyrmstest';
-mongoose.connect(testDbURI);
 mongoose.Promise = global.Promise;
+mongoose.connect(testDbURI);
 
 function getObjectId() {
     return mongoose.Types.ObjectId();
@@ -19,6 +19,7 @@ function createTradeReq() {
     };
 }
 
+/* Unit tests for TradeReqSchema. */
 describe('TradeReqSchema', function() {
 
 
@@ -65,7 +66,7 @@ describe('TradeReqSchema', function() {
 
     });
 
-    it('can remove a requested from the database', function(done) {
+    it('can update data inside the database', function(done) {
         var obj = createTradeReq();
 
         TradeReq.createReq(obj, (err, data) => {
@@ -80,6 +81,26 @@ describe('TradeReqSchema', function() {
                 });
             });
         });
+    });
+
+    it('can remove data inside the database', function(done) {
+        var obj = createTradeReq();
+        TradeReq.createReq(obj, (err, data) => {
+            if (err) {throw new Error(err);}
+            var id = data._id;
+            TradeReq.removeByID(id, err => {
+                if (err) {throw new Error(err);}
+                expect(err).to.be.null;
+
+                TradeReq.findOne({_id: data._id}, (err, foundData) => {
+                    if (err) {throw new Error(err);}
+                    expect(foundData, 'Removed data should not be found').to.be.null;
+                    done();
+                });
+
+            });
+        });
+
     });
 
 });
