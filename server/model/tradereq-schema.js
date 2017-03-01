@@ -15,11 +15,13 @@ var TradeReqSchema = new Schema({
         type: Date
     },
     requestedBook: {
-        type: String,
+        type: ObjectId,
+        ref: 'Book',
         required: true
     },
     tradedBook: {
-        type: String
+        type: ObjectId,
+        ref: 'Book'
     },
     fromUser: {
         type: ObjectId,
