@@ -1,12 +1,13 @@
 
 
-const mongoose = require('mongoose');
 const expect = require('chai').expect;
 const User = require('../server/model/user-schema.js');
 
-var testDbURI = 'mongodb://localhost:27017/bookwyrmstest';
-mongoose.Promise = global.Promise;
-mongoose.connect(testDbURI);
+const Utils = require('./test-utils');
+
+const getObjectId = Utils.getObjectId;
+
+Utils.connectTestDb();
 
 describe('UserSchema', function() {
 
@@ -65,13 +66,13 @@ describe('UserSchema', function() {
         User.findOne(username, (err, data) => {
             if (err) {throw new Error(err);}
             else {
-                var book = {title: 'The Holy Bible'};
+                var book = getObjectId();
                 data.addBook(book, err => {
                     if (err) {throw new Error(err);}
                     User.findOne(username, (err, data) => {
                         if (err) {throw new Error(err);}
                         expect(data.bookList.length).to.equal(1);
-                        expect(data.bookList[0].title).to.equal(book.title);
+                        Utils.expectEqualObjectId(data.bookList[0], book);
                         done();
                     });
                 });
@@ -80,7 +81,36 @@ describe('UserSchema', function() {
         });
     });
 
-    it('can have books removed also', function() {
+    it('can have books removed also', function(done) {
+        var bookId = getObjectId();
+        var username = {username: 'aaa'};
+        User.update(username, {$set: {bookList: [bookId]}}, {}, (err) => {
+            if (err) {throw new Error(err);}
+            else if (user) {
+                User.findOne(username, (err, user) => {
+                    if (err) {throw new Error(err);}
+
+                    console.log(JSON.stringify(user));
+                    expect(user.bookList.length).to.be.equal(1);
+
+                    user.removeBook(bookId, err => {
+                        if (err) {throw new Error(err);}
+                        User.findOne(username, (err, user) => {
+                            if (err) {throw new Error(err);}
+                            expect(user.bookList.length).to.be.equal(0);
+                            done();
+                        });
+
+                    });
+                });
+
+
+            }
+            else {
+                throw new Error('No user with name ' + username.username);
+            }
+
+        });
 
     });
 

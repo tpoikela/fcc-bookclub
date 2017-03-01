@@ -58,11 +58,11 @@ var UserSchema = new Schema({
         type: String
     },
 
-    bookList: [],
+    bookList: [{type: ObjectId, ref: 'Book'}],
     tradeReqsPending: [{type: ObjectId, ref: 'TradeReq'}]
 
 },
-{collection: 'bookclub_users'}
+{collection: 'users'}
 );
 
 //---------------------------------------------------------------------------
@@ -88,23 +88,32 @@ UserSchema.statics.getUserID = function(username, cb) {
  * schema.*/
 UserSchema.methods.update = function(obj, cb) {
     var setVals = {$set: obj};
-    this.model('User').update({_id: this._id}, setVals, {}, (err) => {
-        if (err) {cb(err);}
-        cb(null);
+    this.model('User').update({_id: this._id}, setVals, {}, (err, data) => {
+        if (err) {cb(err, null);}
+        cb(null, data);
     });
 };
 
 /* Adds one book for the user.*/
-UserSchema.methods.addBook = function(book, cb) {
+UserSchema.methods.addBook = function(bookId, cb) {
     var list = this.bookList;
-    list.push(book);
+    list.push(bookId);
     var updateObj = {bookList: list};
     this.update(updateObj, cb);
 };
 
-
+/* Removes a book from user. */
 UserSchema.methods.removeBook = function(book, cb) {
-
+    var list = this.bookList;
+    var index = list.indexOf(book);
+    if (index >= 0) {
+        list.splice(index, 1);
+        var updateObj = {bookList: list};
+        this.update(updateObj, cb);
+    }
+    else {
+        console.error('No book ' + book + ' found for user ' + this.username);
+    }
 };
 
 module.exports = mongoose.model('User', UserSchema);
