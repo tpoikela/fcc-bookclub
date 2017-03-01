@@ -1,24 +1,26 @@
-
 'use strict';
 
 var React = require('react');
 
 const appUrl = window.location.origin;
 const ajax = require('../common/ajax-functions.js');
-// const UserController = require('../controllers/userController.client');
-// const ProfileVenueItem = require('./prof-item.jsx');
+const UserCtrl = require('../ctrl/user-ctrl');
+const BookCtrl = require('../ctrl/book-ctrl');
+const ProfileBookList = require('./book-list');
 
-/** This component is used at the profile page of a user.*/
+/* This component is used at the profile page of a user.*/
 class ProfileTop extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.userCtrl = new UserController(appUrl);
-        this.userCtrl = null;
+        this.userCtrl = new UserCtrl(appUrl);
+		this.bookCtrl = new BookCtrl(appUrl);
 
         this.onRemoveClick = this.onRemoveClick.bind(this);
+        this.addBook = this.addBook.bind(this);
 
         this.state = {
+            userdata: null,
             username: null,
             userID: null,
             error: null
@@ -26,10 +28,10 @@ class ProfileTop extends React.Component {
     }
 
     log(msg) {
-        console.log('ProfileTop Log: ' + msg);
+        console.log('ProfileTop [LOG]: ' + msg);
     }
 
-    // TODO: Remove a venue where user is going to
+    /* Removes a book from the user. */
     onRemoveClick(appID) {
         console.log('onRemoveClick with appID: ' + appID);
         var url = appUrl + '/going';
@@ -48,6 +50,7 @@ class ProfileTop extends React.Component {
 
     }
 
+    /* Checks that user is properly authorised. */
     checkAuthorisation() {
         this.userCtrl.amIAuthorized( (err, data) => {
             if (err) {
@@ -71,11 +74,12 @@ class ProfileTop extends React.Component {
      * */
     getUserInfo() {
         var username = this.state.username;
+        console.log('Retrieving userinfo with name ' + username);
         this.userCtrl.getUserProfileData(username, (err, data) => {
             if (err) {this.setState({error: 'An error occurred.'});}
             else {
                 this.log('ProfileTop got data: ' + JSON.stringify(data));
-                this.setState({venues: data.venues});
+                this.setState({userdata: data});
             }
         });
     }
@@ -84,42 +88,29 @@ class ProfileTop extends React.Component {
         this.checkAuthorisation();
     }
 
+	/* Adds one book for the user. */
+    addBook(e) {
+        var target = e.target;
+		// TODO add ctrl to handle the ajax to the server
+    }
+
     render() {
-        var username = this.state.username;
-        var venues = this.state.venues;
-
-        // Generate the list of venues here
-        var venueHtml = null;
-        var venueText = <p>You're not going to any venues.</p>;
-        /*
-        if (venues) {
-            venueHtml = venues.map( (item, index) => {
-                return (<ProfileVenueItem key={index}
-                    onRemoveClick={this.onRemoveClick} venue={item}
-                />);
-            });
-
-            if (venues.length > 0) {
-                venueText = (<div>
-                    <p>You're currently going to the following places:</p>
-                    <ul className='profile-venue-list'>
-                        {venueHtml}
-                    </ul>
-                </div>);
-            }
+        var bookList = null;
+        if (this.state.userdata) {
+            bookList = <ProfileBookList books={this.state.userdata.bookList} />;
         }
-        */
 
+        var username = this.state.username;
         return (
             <div className='profile-info'>
-                <h2>Profile: {username}</h2>
-                {venueText}
+                <h2>Username: {username}</h2>
+                {bookList}
+                <AddBook onClick={this.addBook}/>
             </div>
         );
-
     }
 
 }
 
-
 module.exports = ProfileTop;
+
