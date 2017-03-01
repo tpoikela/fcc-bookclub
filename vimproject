@@ -1,79 +1,86 @@
 fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
- .eslintignore
+ LICENSE
+ README.md
+ TODO.html
+ TODO.md
+ dbTest.js
+ gulpfile.js
+ npm-debug.log
+ package.json
  server.js
+ tags
+ testem.json
+ vimproject
  . # pragma keep
  build=build {
-  main.css
   bundle.js
+  main.css
  }
- .eslintrc
- package.json
- .gitignore
- gulpfile.js
  .git=.git {
+  COMMIT_EDITMSG
+  FETCH_HEAD
+  HEAD
+  ORIG_HEAD
+  config
+  description
+  index
+  packed-refs
   hooks=hooks {
-   pre-applypatch.sample
-   pre-rebase.sample
-   commit-msg.sample
    applypatch-msg.sample
+   commit-msg.sample
+   post-update.sample
+   pre-applypatch.sample
    pre-commit.sample
    pre-push.sample
+   pre-rebase.sample
    prepare-commit-msg.sample
    update.sample
-   post-update.sample
   }
   logs=logs {
    HEAD
   }
   objects=objects {
   }
-  FETCH_HEAD
-  config
   refs=refs {
   }
-  ORIG_HEAD
-  description
-  COMMIT_EDITMSG
   info=info {
    exclude
   }
-  index
-  packed-refs
-  HEAD
   branches=branches {
   }
  }
  test=test {
+  ajaxFunctionsTest.js
+  test-utils.js
   tradeReqSchemaTest.js
   userSchemaTest.js
-  .eslintrc
-  ajaxFunctionsTest.js
  }
- .env
- README.md
  pug=pug {
-  signup_done.pug
-  login.pug
-  index.pug
-  mixins.pug
   about.pug
+  index.pug
+  login.pug
+  mixins.pug
   profile.pug
   signup.pug
+  signup_done.pug
  }
- .babelrc
  public=public {
  }
- .tern-project
- dbTest.js
  scss=scss {
   main.scss
  }
- testem.json
  client=client {
+  ctrl=ctrl {
+   book-ctrl.js
+   user-ctrl.js
+  }
   jsx=jsx {
-   top.jsx
+   add-book.jsx
    app.jsx
+   book-item.jsx
+   book-list.jsx
    profile.jsx
+   top.jsx
   }
   common=common {
    ajax-functions.js
@@ -87,17 +94,17 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
    routes.js
   }
   ctrl=ctrl {
+   bookController.server.js
    userController.server.js
   }
   model=model {
-   user-schema.js
+   book-schema.js
    tradereq-schema.js
+   user-schema.js
   }
   common=common {
    hash-password.js
    validation.js
   }
  }
- vimproject
- LICENSE
 }

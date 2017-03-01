@@ -12,7 +12,7 @@ var spawn = require('child_process').spawn;
 
 var jsxDir = './client/jsx';
 
-var port = process.env.PORT || 7070;
+var port = process.env.PORT || 8080;
 
 // Define paths for all source files here
 var paths = {
@@ -89,7 +89,7 @@ gulp.task('serve', function(cb) {
 // Bit unusual task. Builds ctags-file for easier src navigation in Vim
 gulp.task('tags', function() {
     console.log('Building ctags for the project.');
-    spawn('ctags', ['-R', 'app/', 'pug/', 'scss/']);
+    spawn('ctags', ['-R'].concat(paths.tags));
 });
 
 var watchDependents = [
