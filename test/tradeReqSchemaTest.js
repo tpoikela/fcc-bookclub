@@ -3,25 +3,18 @@ const mongoose = require('mongoose');
 const expect = require('chai').expect;
 const TradeReq = require('../server/model/tradereq-schema');
 
+const Utils = require('./test-utils');
+
 var testDbURI = 'mongodb://localhost:27017/bookwyrmstest';
 mongoose.Promise = global.Promise;
 mongoose.connect(testDbURI);
 
-function getObjectId() {
-    return mongoose.Types.ObjectId();
-}
-
-function createTradeReq() {
-    return {
-        from: getObjectId(),
-        to: getObjectId(),
-        book: 'xxx yyy zzz'
-    };
-}
+const getObjectId = Utils.getObjectId;
+const createTradeReq = Utils.createTradeReq;
+const expectEqualObjectId = Utils.expectEqualObjectId;
 
 /* Unit tests for TradeReqSchema. */
 describe('TradeReqSchema', function() {
-
 
     beforeEach( () => {
         // tradeReq = new TradeReq();
@@ -49,7 +42,7 @@ describe('TradeReqSchema', function() {
         var obj = {
             from: testUser,
             to: toUser,
-            book: 'XXX Book'
+            book: getObjectId()
         };
 
         TradeReq.createReq(obj, function(err) {
@@ -71,12 +64,13 @@ describe('TradeReqSchema', function() {
 
         TradeReq.createReq(obj, (err, data) => {
             if (err) {throw new Error(err);}
-            data.update({tradedBook: 'abcdefg'}, err => {
+            var tradedId = getObjectId();
+            data.update({tradedBook: tradedId}, err => {
                 expect(err).to.be.null;
 
                 TradeReq.findOne({_id: data._id}, (err, foundData) => {
                     if (err) {throw new Error(err);}
-                    expect(foundData.tradedBook).to.be.equal('abcdefg');
+                    expectEqualObjectId(foundData.tradedBook, tradedId);
                     done();
                 });
             });
