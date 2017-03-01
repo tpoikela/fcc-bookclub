@@ -4,6 +4,7 @@ var path = process.cwd();
 var ctrlPath = path + '/server/ctrl';
 
 const UserController = require(ctrlPath + '/userController.server.js');
+const BookController = require(ctrlPath + '/bookController.server.js');
 
 var $DEBUG = 0;
 
@@ -46,6 +47,7 @@ module.exports = function(app, passport) {
 
     // CONTROLLERS
     var userController = new UserController(path);
+    var bookController = new BookController(path);
 
     //----------------------------------------------------------------------
     // ROUTES
@@ -130,7 +132,6 @@ module.exports = function(app, passport) {
         .get(isLoggedIn, (req, res) => {
             var username = req.params.name;
             if (username === req.user.username) {
-                // TODO send actual user profile data
                 userController.getUserByName(username, (err, data) => {
                     if (err) {
                         logError('/user/' + username, err);
@@ -138,12 +139,32 @@ module.exports = function(app, passport) {
                     }
                     else {
                         // TODO don't send password
+                        delete data.local.password;
                         res.json(data);
                     }
                 });
             }
             else {
                 // Forbidden
+                res.sendStatus(403);
+            }
+        });
+
+    //--------------------------------------
+    // Routes for the book data
+    //--------------------------------------
+    app.route('/book')
+        .post(isLoggedIn, (req, res) => {
+            var username = req.body.username;
+            var book = req.body.book;
+            console.log('Server got req to /book. USer: ' + username);
+            if (username === req.user.username) {
+                bookController.addBook(book, (err, bookData) => {
+
+                });
+                res.sendStatus(200);
+            }
+            else {
                 res.sendStatus(403);
             }
         });
