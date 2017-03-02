@@ -7,6 +7,7 @@ const ajax = require('../common/ajax-functions.js');
 const UserCtrl = require('../ctrl/user-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
 const ProfileBookList = require('./book-list');
+const AddBook = require('./add-book');
 
 /* This component is used at the profile page of a user.*/
 class ProfileTop extends React.Component {
@@ -29,6 +30,11 @@ class ProfileTop extends React.Component {
 
     log(msg) {
         console.log('ProfileTop [LOG]: ' + msg);
+    }
+
+    jsonLog(msg, obj) {
+        var fullMsg = (msg + ': ' + JSON.stringify(obj));
+        this.log(fullMsg);
     }
 
     /* Removes a book from the user. */
@@ -89,15 +95,41 @@ class ProfileTop extends React.Component {
     }
 
 	/* Adds one book for the user. */
-    addBook(e) {
-        var target = e.target;
-		// TODO add ctrl to handle the ajax to the server
+    addBook(bookName) {
+        console.log('Book ' + bookName + ' will be added.');
+        this.bookCtrl.addBook(this.state.username, bookName,
+            (err, resp) => {
+                if (err) {this.setState({error: err});}
+                else {
+                    this.jsonLog('addBook response data', resp);
+                    var data = this.state.userdata;
+                    data.bookList.push(resp);
+                    this.setState({userdata: data});
+                }
+        });
+    }
+
+    /* Deletes one book.*/
+    deleteBook(bookData) {
+        this.bookCtrl.deleteBook(bookData, (err, resp) => {
+            if (err) {this.setState({error: err});}
+            else {
+                this.jsonLog('deleteBook response data', resp);
+
+            }
+        });
+
     }
 
     render() {
         var bookList = null;
         if (this.state.userdata) {
-            bookList = <ProfileBookList books={this.state.userdata.bookList} />;
+            bookList = (
+                <ProfileBookList
+                    books={this.state.userdata.bookList}
+                    onClickDelete={this.deleteBook}
+                />
+            );
         }
 
         var username = this.state.username;
@@ -105,7 +137,7 @@ class ProfileTop extends React.Component {
             <div className='profile-info'>
                 <h2>Username: {username}</h2>
                 {bookList}
-                <AddBook onClick={this.addBook}/>
+                <AddBook onClickAdd={this.addBook}/>
             </div>
         );
     }
