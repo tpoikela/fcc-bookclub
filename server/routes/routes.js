@@ -3,13 +3,13 @@
 var path = process.cwd();
 var ctrlPath = path + '/server/ctrl';
 
-const UserController = require(ctrlPath + '/userController.server.js');
-const BookController = require(ctrlPath + '/bookController.server.js');
+const UserController = require(ctrlPath + '/user-ctrl.server.js');
+const BookController = require(ctrlPath + '/book-ctrl.server.js');
 
 var $DEBUG = 0;
 
 var _log = function(msg) {
-    console.log('\t' + msg);
+    console.log('[LOG@SERVER]: ' + msg);
 };
 
 /* Function for debug logging requests.*/
@@ -22,6 +22,9 @@ var reqDebug = function(req) {
 	_log('Content:' + JSON.stringify(req.content));
 	_log('Query:' + JSON.stringify(req.query));
 };
+
+var notAuthorized = {msg: 'Operation not authorized. Log in first.'};
+var errorInternal = {msg: 'Server internal error.'};
 
 module.exports = function(app, passport) {
 
@@ -95,7 +98,7 @@ module.exports = function(app, passport) {
     app.route('/forms/signup')
         .post((req, res) => {
             if ($DEBUG) {
-                console.log('Got a signup form GET request..');
+                _log('Got a signup form GET request..');
                 reqDebug(req);
             }
             userController.addLocalUser(req, res);
@@ -135,7 +138,7 @@ module.exports = function(app, passport) {
                 userController.getUserByName(username, (err, data) => {
                     if (err) {
                         logError('/user/' + username, err);
-                        res.sendStatus(500);
+                        res.status(500).json(errorInternal);
                     }
                     else {
                         // TODO don't send password
@@ -157,15 +160,22 @@ module.exports = function(app, passport) {
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
             var book = req.body.book;
-            console.log('Server got req to /book. USer: ' + username);
+            _log('Server got req to /book. USer: ' + username);
             if (username === req.user.username) {
-                bookController.addBook(book, (err, bookData) => {
-
+                var bookData = {username: username, book: book};
+                bookController.addBook(bookData, (err, bookData) => {
+                    if (err) {
+                        logError('/book/' + book, err);
+                        res.status(500).json(errorInternal);
+                    }
+                    else {
+                        console.log('bookData is ' + JSON.stringify(bookData));
+                        res.status(200).json(bookData);
+                    }
                 });
-                res.sendStatus(200);
             }
             else {
-                res.sendStatus(403);
+                res.status(403).json(notAuthorized);
             }
         });
 
