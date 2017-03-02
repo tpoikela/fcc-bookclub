@@ -1,8 +1,9 @@
+'use strict';
 
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
+const ObjectId = Schema.Types.ObjectId;
 
 /* BookSchema is used for storing info about all the books in the club. As there
  * can be multiple copies of same title, each "physical" book has a unique ID
@@ -63,7 +64,7 @@ BookSchema.methods.update = function(obj, cb) {
     var setVals = {$set: obj};
     this.model('Book').update({_id: this._id}, setVals, {}, (err) => {
         if (err) {cb(err);}
-        cb(null);
+        else {cb(null);}
     });
 };
 
