@@ -33,7 +33,7 @@ class AddBook extends React.Component {
                     placeholder='What books have you?'
                     value={this.state.bookName}
 				/>
-                <button id='add-button' onClick={this.onAddClick}>
+                <button id='add-button' onClick={this.onClickAdd}>
                     <i className='search-icon fa fa-search fa-2x'/>
                 </button>
 
