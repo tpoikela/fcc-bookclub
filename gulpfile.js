@@ -16,7 +16,7 @@ var port = process.env.PORT || 8080;
 
 // Define paths for all source files here
 var paths = {
-    client: ['./client/jsx/*.jsx'],
+    client: ['./client/jsx/*.jsx', './client/**/*.js'],
     sass: ['./scss/*.*'],
 
     server: './server.js',
@@ -95,16 +95,19 @@ gulp.task('tags', function() {
 var watchDependents = [
   'build-js',
   'tags',
-  'build-sass',
-  'serve'
+  'build-sass'
 ];
 
-gulp.task('watch', watchDependents, function() {
+gulp.task('watch-cli', watchDependents, function() {
     gulp.watch(paths.client, ['build-js']);
-    gulp.watch(paths.server, ['serve']);
     gulp.watch(paths.sass, ['build-sass']);
     gulp.watch(paths.tags, ['tags']);
 });
+
+gulp.task('watch', ['watch-cli', 'serve'], function() {
+    gulp.watch(paths.server, ['serve']);
+});
+
 
 gulp.task('default', ['watch']);
 
