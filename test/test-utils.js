@@ -18,6 +18,10 @@ var TestUtils = {
         var testDbURI = 'mongodb://localhost:27017/bookwyrmstest';
         mongoose.Promise = global.Promise;
         mongoose.connect(testDbURI);
+    },
+
+    clearTestDb: function(coll, cb) {
+        mongoose.connection.db.dropCollection(coll, cb);
     }
 };
 
