@@ -69,6 +69,15 @@ var UserSchema = new Schema({
 // STATIC METHODS
 //---------------------------------------------------------------------------
 
+UserSchema.statics.getUser = function(username, cb) {
+    this.model('User').findOne({username: username}, (err, data) => {
+        if (err) {return cb(err);}
+        if (data) {return cb(null, data);}
+        var error = new Error('No user with given ID found.');
+        return cb(error);
+    });
+};
+
 /* Calls given callback with user ID corresponding to the given username.*/
 UserSchema.statics.getUserID = function(username, cb) {
     this.model('User').findOne({username: username}, (err, data) => {
