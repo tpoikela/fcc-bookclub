@@ -70,12 +70,20 @@ var UserSchema = new Schema({
 //---------------------------------------------------------------------------
 
 UserSchema.statics.getUser = function(username, cb) {
-    this.model('User').findOne({username: username}, (err, data) => {
-        if (err) {return cb(err);}
-        if (data) {return cb(null, data);}
-        var error = new Error('No user with given ID found.');
-        return cb(error);
-    });
+    if (username) {
+        this.model('User').findOne({username: username}, (err, data) => {
+            if (err) {cb(err);}
+            else if (data) {cb(null, data);}
+            else {
+                var error = new Error('No user |' + username + '| found.');
+                cb(error);
+            }
+        });
+    }
+    else {
+        var error = new Error('No username given.');
+        cb(error);
+    }
 };
 
 /* Calls given callback with user ID corresponding to the given username.*/
@@ -112,16 +120,18 @@ UserSchema.methods.addBook = function(bookId, cb) {
 };
 
 /* Removes a book from user. */
-UserSchema.methods.removeBook = function(book, cb) {
+UserSchema.methods.removeBook = function(bookId, cb) {
     var list = this.bookList;
-    var index = list.indexOf(book);
+    var index = list.indexOf(bookId);
     if (index >= 0) {
         list.splice(index, 1);
         var updateObj = {bookList: list};
         this.update(updateObj, cb);
     }
     else {
-        console.error('No book ' + book + ' found for user ' + this.username);
+        console.error('No book ID' + bookId.toString() + ' found for user '
+            + this.username);
+        console.error('User bookList: ' + JSON.stringify(list));
     }
 };
 
