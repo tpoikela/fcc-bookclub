@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var $DEBUG = 0;
+const debug = require('debug')('book:server');
 
 loadDotEnv();
 
@@ -14,9 +14,12 @@ const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
 
 // App-specific requires
 const routes = require('./server/routes/routes.js');
+
+debug('All requires loaded.');
 
 var app = express();
 app.set('view engine', 'pug');
@@ -35,6 +38,8 @@ app.use('/ctrl', express.static(process.cwd() + '/server/ctrl'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/common', express.static(process.cwd() + '/server/common'));
 app.use('/pug', express.static(process.cwd() + '/pug'));
+
+app.use(helmet());
 
 app.use(session({
 	secret: process.env.SECRET_KEY,
@@ -66,16 +71,13 @@ app.listen(port, () => {
 function loadDotEnv() {
     // When deployed to heroku, don't use .env
     if (process.env.NODE_ENV !== 'production') {
+        debug('BookWyrms server Not in prod. Loading local .env file.');
         require('dotenv').load();
-        $DEBUG = process.env.DEBUG || 0;
-        if ($DEBUG) {
-            console.log('Loaded .env file OK. Node env: '
-            + process.env.NODE_ENV);
-        }
-        console.log('BookWyrms server Running in development environment');
+        debug('Loaded .env file OK. Node env: '
+        + process.env.NODE_ENV);
     }
     else {
-        console.log('BookWyrms server Running now in production environment');
+        debug('BookWyrms server Running in PRODUCTION environment');
     }
 }
 
