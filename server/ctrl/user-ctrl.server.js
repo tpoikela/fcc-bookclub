@@ -54,7 +54,7 @@ module.exports = function(path) {
 
     var sendAuthenticatedUserInfo = function(res, username) {
         User.findOne({username: username})
-            .populate('venues favourites')
+            .populate('bookList')
             .exec(function(err, user) {
                 if (err) {return errorHandler(err, res);}
 
@@ -94,12 +94,18 @@ module.exports = function(path) {
      * it to callback.*/
     this.getUserByName = function(username, cb) {
         User.findOne({username: username})
-            // .populate('venues favourites')
-            .populate('venues')
+            .populate('bookList')
             .exec( (err, user) => {
-            if (err) {return cb(err);}
-            else if (user) {return cb(null, user);}
-            else {return cb(null, null);}
+                if (err) {
+                    return cb(err);
+                }
+                else if (user) {
+                    console.log('SERVER WILL RETURN: ' + JSON.stringify(user));
+                    return cb(null, user);
+                }
+                else {
+                    return cb(null, null);
+                }
         });
     };
 
