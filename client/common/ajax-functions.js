@@ -49,6 +49,34 @@ var ajaxFuncs = {
             console.error('ajax-post Wrong data type: ' + typeof data);
         }
 
+    },
+
+    delete: (url, data, cb) => {
+        if ($DEBUG) {console.log('ajax-delete to URL: ' + url);}
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if ($DEBUG) {console.log('Resp text:' + xhr.responseText);}
+                cb(null, xhr.responseText);
+            }
+            else if (xhr.readyState === 4 && xhr.status === 500) {
+                cb(500, xhr.responseText);
+            }
+        };
+        xhr.open('delete', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        if (typeof data === 'string') {
+            xhr.send(data);
+        }
+        else if (typeof data === 'object') {
+            xhr.send(JSON.stringify(data));
+        }
+        else {
+            console.error('ajax-delete Wrong data type: ' + typeof data);
+        }
+
     }
 
 };
