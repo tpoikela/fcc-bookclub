@@ -1,11 +1,9 @@
 fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
  LICENSE
  README.md
- TODO.html
  TODO.md
  dbTest.js
  gulpfile.js
- npm-debug.log
  package.json
  server.js
  tags
@@ -51,6 +49,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
  }
  test=test {
   ajaxFunctionsTest.js
+  bookSchemaTest.js
   test-utils.js
   tradeReqSchemaTest.js
   userSchemaTest.js
@@ -94,8 +93,8 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
    routes.js
   }
   ctrl=ctrl {
-   bookController.server.js
-   userController.server.js
+   book-ctrl.server.js
+   user-ctrl.server.js
   }
   model=model {
    book-schema.js
