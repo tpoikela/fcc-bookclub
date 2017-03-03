@@ -12,7 +12,8 @@ class UserController {
 
     /* Used for error reporting. */
     reportError(fun, err, url) {
-        console.error('userCtrl [ERROR]: ' + fun + '(): ' + err + ' url: ' + url);
+        console.error('userCtrl [ERROR]: ' +
+            fun + '(): ' + err + ' url: ' + url);
     }
 
     /* Sends ajax-get to server to check if user is authenticated. */
