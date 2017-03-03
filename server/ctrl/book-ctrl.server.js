@@ -36,10 +36,26 @@ class BookController {
     /* Deletes one book from the book collection and removes it also from the
      * user.*/
     deleteBook(book, cb) {
-        User.getUser(book.username, (err, user) => {
+        User.findOne({_id: book.owner}, (err, user) => {
             if (err) {cb(err);}
+            else if (!user) {
+                var error = new Error('No user |' + book.owner + '|');
+                cb(error);
+            }
+            else {
+                user.removeBook(book._id, err => {
+                    if (err) {cb(err);}
+                    else {
+                        Book.remove({_id: book._id}, err => {
+                            if (err) {cb(err);}
+                            else {
+                                cb(null);
+                            }
+                        });
+                    }
+                });
+            }
         });
-
     }
 
 }
