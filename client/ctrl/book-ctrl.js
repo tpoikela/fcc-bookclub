@@ -2,7 +2,8 @@
 
 const ajax = require('../common/ajax-functions.js');
 
-/* Client-side book controller which handles communication towards the server.
+/* Client-side book controller which handles communication towards the server,
+ * when user wants to add/remove books to/from their profile.
  * */
 class BookCtrl {
 
@@ -10,16 +11,28 @@ class BookCtrl {
         this.appUrl = url;
     }
 
-    addBook(username, book, cb) {
-        var obj = {username: username, book: book};
+    addBook(bookData, cb) {
         var url = this.appUrl + '/book';
-        ajax.post(url, obj, (err, respText) => {
+        ajax.post(url, bookData, (err, respText) => {
             if (err) {cb(err);}
             else {
                 var respData = JSON.parse(respText);
                 cb(null, respData);
             }
         });
+    }
+
+    deleteBook(bookData, cb) {
+        var url = this.appUrl + '/book';
+        ajax.delete(url, bookData, (err, respText) => {
+            if (err) {cb(err);}
+            else {
+                var respData = JSON.parse(respText);
+                cb(null, respData);
+            }
+
+        });
+
     }
 
 }
