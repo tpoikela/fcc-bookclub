@@ -5,8 +5,7 @@ var ctrlPath = path + '/server/ctrl';
 
 const UserController = require(ctrlPath + '/user-ctrl.server.js');
 const BookController = require(ctrlPath + '/book-ctrl.server.js');
-
-var $DEBUG = 0;
+const debug = require('debug')('book-routes');
 
 var _log = function(msg) {
     console.log('[LOG@SERVER]: ' + msg);
@@ -14,17 +13,18 @@ var _log = function(msg) {
 
 /* Function for debug logging requests.*/
 var reqDebug = function(req) {
-	_log('Headers: ' + JSON.stringify(req.headers));
-	_log('Body: ' + JSON.stringify(req.body));
-	_log('Params: ' + JSON.stringify(req.params));
-	_log('Url:' + JSON.stringify(req.url));
-	_log('Text:' + JSON.stringify(req.text));
-	_log('Content:' + JSON.stringify(req.content));
-	_log('Query:' + JSON.stringify(req.query));
+	_log('\t\tHeaders: ' + JSON.stringify(req.headers));
+	_log('\t\tBody: ' + JSON.stringify(req.body));
+	_log('\t\tParams: ' + JSON.stringify(req.params));
+	_log('\t\tUrl:' + JSON.stringify(req.url));
+	_log('\t\tText:' + JSON.stringify(req.text));
+	_log('\t\tContent:' + JSON.stringify(req.content));
+	_log('\t\tQuery:' + JSON.stringify(req.query));
 };
 
 var notAuthorized = {msg: 'Operation not authorized. Log in first.'};
 var errorInternal = {msg: 'Server internal error.'};
+var errorForbidden = {msg: 'Requested action forbidden.'};
 
 module.exports = function(app, passport) {
 
@@ -44,8 +44,18 @@ module.exports = function(app, passport) {
 		}
 	};
 
-    var logError = function(route, err) {
-        console.error('[ERROR@SERVER] route ' + route + ' | ' + err);
+    var logErrorReq = function(req) {
+        console.error('Error REQ headers: ');
+        reqDebug(req);
+    };
+
+    /* Logs an error with route and request information included.*/
+    var logError = function(route, err, req) {
+        var date = new Date();
+        console.error(date + ' [ERROR@SERVER] route ' + route + ' | ' + err);
+        if (req) {
+            logErrorReq(req);
+        }
     };
 
     // CONTROLLERS
@@ -97,10 +107,8 @@ module.exports = function(app, passport) {
     // Handle registration of user
     app.route('/forms/signup')
         .post((req, res) => {
-            if ($DEBUG) {
-                _log('Got a signup form GET request..');
-                reqDebug(req);
-            }
+            debug('Got a signup form GET request..');
+            // reqDebug(req);
             userController.addLocalUser(req, res);
         });
 
@@ -113,7 +121,7 @@ module.exports = function(app, passport) {
                 data.username = req.user.username;
                 userController.getUserID(data.username, (err, userID) => {
                     if (err) {
-                        logError('/amiauth', err);
+                        logError('/amiauth', err, req);
                         res.json({error: 'Failed to authenticate'});
                     }
                     else {
@@ -137,11 +145,10 @@ module.exports = function(app, passport) {
             if (username === req.user.username) {
                 userController.getUserByName(username, (err, data) => {
                     if (err) {
-                        logError('/user/' + username, err);
+                        logError('/user/' + username, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
-                        // TODO don't send password
                         delete data.local.password;
                         res.json(data);
                     }
@@ -149,7 +156,9 @@ module.exports = function(app, passport) {
             }
             else {
                 // Forbidden
-                res.sendStatus(403);
+                logError('/user/' + username,
+                    'Forbidden action attempted.', req);
+                res.status(403).json(errorForbidden);
             }
         });
 
@@ -159,13 +168,13 @@ module.exports = function(app, passport) {
     app.route('/book')
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
-            var book = req.body.book;
-            _log('Server got req to /book. USer: ' + username);
+            var book = req.body.title;
+            _log('Server got POST-req to /book. USer: ' + username);
             if (username === req.user.username) {
                 var bookData = {username: username, book: book};
                 bookController.addBook(bookData, (err, bookData) => {
                     if (err) {
-                        logError('/book/' + book, err);
+                        logError('POST /book/' + book, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
@@ -177,6 +186,26 @@ module.exports = function(app, passport) {
             else {
                 res.status(403).json(notAuthorized);
             }
+        })
+        .delete(isLoggedIn, (req, res) => {
+            if (req.body) {
+                var bookData = req.body;
+                debug('Server got DELETE-req to /book. Data: '
+                    + JSON.stringify(bookData));
+                bookController.deleteBook(bookData, (err) => {
+                    if (err) {
+                        logError('DELETE /book/' + bookData, err, req);
+                        res.status(500).json(errorInternal);
+                    }
+                    else {
+                        res.status(200).json({msg: 'OK'});
+                    }
+                });
+            }
+            else {
+                res.status(400).json({msg: 'No proper body in DELETE'});
+            }
+
         });
 
     //--------------------------------------
