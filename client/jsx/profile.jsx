@@ -19,6 +19,7 @@ class ProfileTop extends React.Component {
 
         this.onRemoveClick = this.onRemoveClick.bind(this);
         this.addBook = this.addBook.bind(this);
+        this.deleteBook = this.deleteBook.bind(this);
 
         this.state = {
             userdata: null,
@@ -97,28 +98,30 @@ class ProfileTop extends React.Component {
 	/* Adds one book for the user. */
     addBook(bookName) {
         console.log('Book ' + bookName + ' will be added.');
-        this.bookCtrl.addBook(this.state.username, bookName,
-            (err, resp) => {
+        var bookData = {username: this.state.username,
+            title: bookName};
+        this.bookCtrl.addBook(bookData, (err, resp) => {
                 if (err) {this.setState({error: err});}
                 else {
                     this.jsonLog('addBook response data', resp);
-                    var data = this.state.userdata;
-                    data.bookList.push(resp);
-                    this.setState({userdata: data});
+                    // var data = this.state.userdata;
+                    // data.bookList.push(resp);
+                    this.getUserInfo();
+                    // this.setState({userdata: data});
                 }
         });
     }
 
     /* Deletes one book.*/
     deleteBook(bookData) {
+        this.jsonLog('deleteBook sending data', bookData);
         this.bookCtrl.deleteBook(bookData, (err, resp) => {
             if (err) {this.setState({error: err});}
             else {
                 this.jsonLog('deleteBook response data', resp);
-
+                this.getUserInfo();
             }
         });
-
     }
 
     render() {

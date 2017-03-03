@@ -8,10 +8,13 @@ class BookList extends React.Component {
     render() {
         var books = this.props.books;
         var bookList = null;
+        var onClickDelete = this.props.onClickDelete;
 
         bookList = books.map( (item, index) => {
             return (
-                <BookItem book={item} key={index} />
+                <BookItem book={item} key={index}
+                    onClickDelete={onClickDelete}
+                />
             );
         });
 
@@ -25,7 +28,8 @@ class BookList extends React.Component {
 }
 
 BookList.propTypes = {
-    books: React.PropTypes.array
+    books: React.PropTypes.array,
+    onClickDelete: React.PropTypes.func
 };
 
 module.exports = BookList;

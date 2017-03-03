@@ -7,11 +7,11 @@ class BookItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
     }
 
-    onClick() {
-        this.props.onClick(this.props.book);
+    onClickDelete() {
+        this.props.onClickDelete(this.props.book);
     }
 
     render() {
@@ -21,7 +21,7 @@ class BookItem extends React.Component {
                 <ul>
                     <li>
                         Title: {book.title}
-                        <button onClick={this.onClick}>X</button>
+                        <button onClick={this.onClickDelete}>X</button>
                     </li>
                 </ul>
             </div>
@@ -31,7 +31,7 @@ class BookItem extends React.Component {
 
 BookItem.propTypes = {
     book: React.PropTypes.object,
-    onClick: React.PropTypes.func
+    onClickDelete: React.PropTypes.func
 };
 
 module.exports = BookItem;
