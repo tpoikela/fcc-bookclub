@@ -5,6 +5,7 @@ var ctrlPath = path + '/server/ctrl';
 
 const UserController = require(ctrlPath + '/user-ctrl.server.js');
 const BookController = require(ctrlPath + '/book-ctrl.server.js');
+const TradeController = require(ctrlPath + '/trade-ctrl.server.js');
 const debug = require('debug')('book-routes');
 
 var _log = function(msg) {
@@ -44,6 +45,24 @@ module.exports = function(app, passport) {
 		}
 	};
 
+    /* Returns the username from the request. Logs an error if username is not
+     * present. */
+    var getUserName = function(req, route) {
+        if (req.user) {
+            if (req.user.username) {
+                return req.user.username;
+            }
+            else {
+                logError(route, 'getUserName: No req.user.username exists.',
+                    req);
+            }
+        }
+        else {
+            logError(route, 'getUserName: No req.user exists.', req);
+        }
+        return null;
+    };
+
     var logErrorReq = function(req) {
         console.error('Error REQ headers: ');
         reqDebug(req);
@@ -61,6 +80,7 @@ module.exports = function(app, passport) {
     // CONTROLLERS
     var userController = new UserController(path);
     var bookController = new BookController(path);
+    var tradeController = new TradeController(path);
 
     //----------------------------------------------------------------------
     // ROUTES
@@ -74,6 +94,11 @@ module.exports = function(app, passport) {
 	app.route('/about')
 		.get((req, res) => {
             renderPug(req, res, 'about.pug');
+		});
+
+	app.route('/allbooks')
+		.get((req, res) => {
+            renderPug(req, res, 'books.pug');
 		});
 
 	app.route('/signup')
@@ -166,15 +191,27 @@ module.exports = function(app, passport) {
     // Routes for the book data
     //--------------------------------------
     app.route('/book')
+        .get(isLoggedIn, (req, res) => {
+            var username = req.user.username;
+            bookController.getBooks(username, (err, data) => {
+                if (err) {
+                    logError('GET /book/', err, req);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    res.status(200).json(data);
+                }
+            });
+        })
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
-            var book = req.body.title;
-            _log('Server got POST-req to /book. USer: ' + username);
+            var bookTitle = req.body.title;
+            _log('Server got POST-req to /book. User: ' + username);
             if (username === req.user.username) {
-                var bookData = {username: username, book: book};
+                var bookData = {username: username, title: bookTitle};
                 bookController.addBook(bookData, (err, bookData) => {
                     if (err) {
-                        logError('POST /book/' + book, err, req);
+                        logError('POST /book/' + bookTitle, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
@@ -190,9 +227,13 @@ module.exports = function(app, passport) {
         .delete(isLoggedIn, (req, res) => {
             if (req.body) {
                 var bookData = req.body;
+                var updateObj = {
+                    username: req.user.username,
+                    book: bookData
+                };
                 debug('Server got DELETE-req to /book. Data: '
                     + JSON.stringify(bookData));
-                bookController.deleteBook(bookData, (err) => {
+                bookController.deleteBook(updateObj, (err) => {
                     if (err) {
                         logError('DELETE /book/' + bookData, err, req);
                         res.status(500).json(errorInternal);
@@ -206,6 +247,45 @@ module.exports = function(app, passport) {
                 res.status(400).json({msg: 'No proper body in DELETE'});
             }
 
+        });
+
+    //----------------------------------
+    // Routes for Trade Requests
+    //----------------------------------
+
+    app.route('/tradereq/accept')
+        .post(isLoggedIn, (req, res) => {
+            var username = getUserName(req, '/tradereq/accept');
+            console.log('accept user ' + username);
+            res.status(500).json(errorInternal);
+
+        });
+
+    app.route('/tradereq/reject')
+        .post(isLoggedIn, (req, res) => {
+            var username = getUserName(req, 'tradereq/reject');
+            console.log('reject user ' + username);
+            res.status(500).json(errorInternal);
+
+        });
+
+    app.route('/tradereq')
+        .post(isLoggedIn, (req, res) => {
+            var username = getUserName(req, '/tradereq');
+            tradeController.addRequest(username, req.body, (err, data) => {
+                if (err) {
+                    logError('POST /tradereq', err, req);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    res.status(200).json(data);
+                }
+            });
+        })
+        .delete(isLoggedIn, (req, res) => {
+            var username = getUserName(req, '/tradereq');
+            console.log('delete user ' + username);
+            res.status(500).json(errorInternal);
         });
 
     //--------------------------------------

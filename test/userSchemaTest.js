@@ -16,9 +16,11 @@ describe('UserSchema', function() {
     beforeEach( done => {
         user = new User();
         user.username = 'aaa';
-        user.local = {};
-        user.local.username = 'aaa';
-        user.local.password = 'ccc';
+        user.local = {
+            username: 'aaa',
+            password: 'ccc'
+        };
+        user.tradeReqs = [];
         user.save( err => {
             if (err) {throw new Error(err);}
             done();
@@ -112,6 +114,37 @@ describe('UserSchema', function() {
 
         });
 
+    });
+
+    it('can have tradeReqs added and removed', function(done) {
+        var tradeReq = {
+            from: 'xxx',
+            book: {title: 'GoodBook'}
+        };
+        User.addTradeReq('aaa', tradeReq, err => {
+            if (err) {throw new Error(err);}
+            else {
+                User.findOne({username: 'aaa'}, (err, data) => {
+                    if (err) {throw new Error(err);}
+                    else {
+                        expect(data).to.have.property('tradeReqs');
+                        var req = data.tradeReqs[0];
+                        expect(req.from).to.equal('xxx');
+
+                        User.removeTradeReq('aaa', tradeReq, err => {
+                            if (err) {throw new Error(err);}
+                            else {
+                                User.findOne({username: 'aaa'}, (err, data) => {
+                                    if (err) {throw new Error(err);}
+                                    expect(data.tradeReqs).to.be.length(0);
+                                    done();
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     });
 
 
