@@ -1,0 +1,17 @@
+//- Page which shows all books in the club
+
+include mixins.pug
+
+doctype html
+html
+  +pageHead("Books")
+
+  body
+    +layoutBase()
+      +appTitle()
+      +topMenu("books")
+
+      div#books-app
+      +appFooter()
+
+    script(type="text/javascript" src="/build/bundle.js" charset="utf-8")
