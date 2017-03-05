@@ -59,7 +59,7 @@ var UserSchema = new Schema({
     },
 
     bookList: [{type: ObjectId, ref: 'Book'}],
-    tradeReqsPending: [{type: ObjectId, ref: 'TradeReq'}]
+    tradeReqs: [{type: Object}]
 
 },
 {collection: 'users'}
@@ -94,6 +94,20 @@ UserSchema.statics.getUserID = function(username, cb) {
 
         var error = new Error('No user with given ID found.');
         return cb(error);
+    });
+};
+
+/* Adds one trade request for this user. */
+UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
+    const User = this.model('User');
+    var updateObj = {$push: {tradeReqs: {tradeReq}}};
+    User.update({username: username}, updateObj, (err, data) => {
+        if (err) {cb(err);}
+        else {
+            console.log(JSON.stringify('User.addTradeReq '
+                + JSON.stringify(data)));
+            cb(null);
+        }
     });
 };
 
