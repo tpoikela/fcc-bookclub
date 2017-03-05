@@ -71,6 +71,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
  client=client {
   ctrl=ctrl {
    book-ctrl.js
+   trade-ctrl.js
    user-ctrl.js
   }
   jsx=jsx {
@@ -78,6 +79,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
    app.jsx
    book-item.jsx
    book-list.jsx
+   books-top.jsx
    profile.jsx
    top.jsx
   }
@@ -94,6 +96,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
   }
   ctrl=ctrl {
    book-ctrl.server.js
+   trade-ctrl.server.js
    user-ctrl.server.js
   }
   model=model {
