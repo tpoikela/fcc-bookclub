@@ -27,21 +27,20 @@ class TradeController {
                 });
             }
         });
-
     }
 
     /* Removes a trade request from the given user.*/
-    removeTradeReq(username, reqBody, cb) {
+    /* removeTradeReq(username, reqBody, cb) {
 
-    }
+    }*/
 
-    acceptTradeReq(username, reqBody, cb) {
+    /* acceptTradeReq(username, reqBody, cb) {
 
-    }
+    }*/
 
-    rejectTradeReq(username, reqBody, cb) {
+    /* rejectTradeReq(username, reqBody, cb) {
 
-    }
+    }*/
 
 }
 
