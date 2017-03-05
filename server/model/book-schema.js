@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
+// const ObjectId = Schema.Types.ObjectId;
 
 /* BookSchema is used for storing info about all the books in the club. As there
  * can be multiple copies of same title, each "physical" book has a unique ID
@@ -24,12 +24,7 @@ const BookSchema = Schema({
     thumbnail: {
         type: String
     },
-    owner: {
-        type: ObjectId,
-        ref: 'User',
-        required: true
-    },
-    tradeReqs: [{type: ObjectId, ref: 'TradeReq'}]
+    tradeReqs: [{type: Object}]
 
 },
 {collection: 'books'}
@@ -44,7 +39,6 @@ BookSchema.statics.create = function(obj, cb) {
     var newBook = new Book();
     newBook.title = obj.title;
     newBook.year = obj.year;
-    newBook.owner = obj.owner;
     newBook.author = obj.author;
     newBook.thumbnail = obj.thumbnail;
 
@@ -53,6 +47,18 @@ BookSchema.statics.create = function(obj, cb) {
         else {cb(null, data);}
     });
 
+};
+
+/* Adds a trade request for given bookId. */
+BookSchema.statics.addTradeReq = function(obj, cb) {
+    var Book = this.model('Book');
+    var updateObj = {
+        $push: {tradeReqs: obj.tradeReq}
+    };
+    Book.update({_id: obj.bookId}, updateObj, err => {
+        if (err) {cb(err);}
+        else {cb(null);}
+    });
 };
 
 //---------------------------------------------------------------------------
