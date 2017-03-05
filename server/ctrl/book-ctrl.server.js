@@ -8,12 +8,22 @@ const User = require('../model/user-schema');
  */
 class BookController {
 
-    /* Adds one book to the database and for the user.*/
-    addBook(book, cb) {
-        User.getUser(book.username, (err, user) => {
+    /* Returns all books in the database.*/
+    getBooks(username, cb) {
+        Book.find({}, (err, data) => {
             if (err) {cb(err);}
             else {
-                var obj = {title: book.book, owner: user._id};
+                cb(null, data);
+            }
+        });
+    }
+
+    /* Adds one book to the database and for the user.*/
+    addBook(updateObj, cb) {
+        User.getUser(updateObj.username, (err, user) => {
+            if (err) {cb(err);}
+            else {
+                var obj = {title: updateObj.title};
                 Book.create(obj, (err, bookData) => {
                     if (err) {cb(err);}
                     else {
@@ -35,11 +45,13 @@ class BookController {
 
     /* Deletes one book from the book collection and removes it also from the
      * user.*/
-    deleteBook(book, cb) {
-        User.findOne({_id: book.owner}, (err, user) => {
+    deleteBook(updateObj, cb) {
+        var username = updateObj.username;
+        var book = updateObj.book;
+        User.findOne({username: username}, (err, user) => {
             if (err) {cb(err);}
             else if (!user) {
-                var error = new Error('No user |' + book.owner + '|');
+                var error = new Error('No user |' + username + '|');
                 cb(error);
             }
             else {
