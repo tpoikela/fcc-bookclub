@@ -48,6 +48,8 @@ mixin topMenu(title)
         a.menu(href="/") Home
       - if (isAuth) {
         li
+          a.menu(href="/allbooks") Books
+        li
           a.menu(href="/profile") Profile
         li
           a.menu(href="/logout") Logout
