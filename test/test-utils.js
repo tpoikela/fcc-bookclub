@@ -1,7 +1,9 @@
-
+'use strict';
 
 const mongoose = require('mongoose');
 const expect = require('chai').expect;
+const User = require('../server/model/user-schema');
+const Book = require('../server/model/book-schema');
 
 var TestUtils = {
 
@@ -31,6 +33,23 @@ TestUtils.createTradeReq = function() {
         to: TestUtils.getObjectId(),
         book: TestUtils.getObjectId()
     };
+};
+
+TestUtils.createUser = function(name) {
+    var user = new User();
+    user.username = name;
+    user.local = {
+        username: name,
+        password: name
+    };
+    return user;
+};
+
+TestUtils.createBook = function(title) {
+    var book = new Book();
+    book.title = title;
+    return book;
+
 };
 
 module.exports = TestUtils;
