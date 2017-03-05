@@ -59,7 +59,7 @@ var UserSchema = new Schema({
     },
 
     bookList: [{type: ObjectId, ref: 'Book'}],
-    tradeReqs: [{type: Object}]
+    tradeReqs: {type: Array}
 
 },
 {collection: 'users'}
@@ -99,14 +99,23 @@ UserSchema.statics.getUserID = function(username, cb) {
 
 /* Adds one trade request for this user. */
 UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
-    const User = this.model('User');
-    var updateObj = {$push: {tradeReqs: {tradeReq}}};
-    User.update({username: username}, updateObj, (err, data) => {
+    var User = this.model('User');
+    var pushObj = {$push: {tradeReqs: tradeReq}};
+    User.update({username: username}, pushObj, (err, data) => {
         if (err) {cb(err);}
         else {
-            console.log(JSON.stringify('User.addTradeReq '
-                + JSON.stringify(data)));
-            cb(null);
+            cb(null, data);
+        }
+    });
+};
+
+UserSchema.statics.removeTradeReq = function(username, tradeReq, cb) {
+    var User = this.model('User');
+    var pullObj = {$pull: {tradeReqs: {'book.title': tradeReq.book.title}}};
+    User.update({username: username}, pullObj, (err, data) => {
+        if (err) {cb(err);}
+        else {
+            cb(null, data);
         }
     });
 };

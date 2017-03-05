@@ -24,7 +24,7 @@ const BookSchema = Schema({
     thumbnail: {
         type: String
     },
-    tradeReqs: [{type: Object}]
+    tradeReqs: {type: Array}
 
 },
 {collection: 'books'}
