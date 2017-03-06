@@ -64,6 +64,9 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
   signup_done.pug
  }
  public=public {
+  css=css {
+   font-awesome.css
+  }
  }
  scss=scss {
   main.scss
@@ -81,6 +84,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
    book-list.jsx
    books-top.jsx
    profile.jsx
+   prof-req-list.jsx
    top.jsx
   }
   common=common {
