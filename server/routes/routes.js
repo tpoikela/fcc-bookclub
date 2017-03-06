@@ -26,6 +26,7 @@ var reqDebug = function(req) {
 var notAuthorized = {msg: 'Operation not authorized. Log in first.'};
 var errorInternal = {msg: 'Server internal error.'};
 var errorForbidden = {msg: 'Requested action forbidden.'};
+var requestOk = {msg: 'Request was completed OK.'};
 
 module.exports = function(app, passport) {
 
@@ -272,13 +273,13 @@ module.exports = function(app, passport) {
     app.route('/tradereq')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq');
-            tradeController.addRequest(username, req.body, (err, data) => {
+            tradeController.addTradeReq(username, req.body, err => {
                 if (err) {
                     logError('POST /tradereq', err, req);
                     res.status(500).json(errorInternal);
                 }
                 else {
-                    res.status(200).json(data);
+                    res.status(200).json(requestOk);
                 }
             });
         })
