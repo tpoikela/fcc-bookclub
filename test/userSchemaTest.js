@@ -92,7 +92,6 @@ describe('UserSchema', function() {
                 User.findOne(username, (err, user) => {
                     if (err) {throw new Error(err);}
 
-                    console.log(JSON.stringify(user));
                     expect(user.bookList.length).to.be.equal(1);
 
                     user.removeBook(bookId, err => {
