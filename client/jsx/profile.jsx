@@ -8,6 +8,7 @@ const UserCtrl = require('../ctrl/user-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
 const ProfileBookList = require('./book-list');
 const AddBook = require('./add-book');
+const ProfileReqList = require('./prof-req-list');
 
 /* This component is used at the profile page of a user.*/
 class ProfileTop extends React.Component {
@@ -124,8 +125,15 @@ class ProfileTop extends React.Component {
         });
     }
 
+    handleTradeReq(tradeReq) {
+
+    }
+
     render() {
         var bookList = null;
+        var reqList = null;
+        // var contactInfo = null;
+
         if (this.state.userdata) {
             bookList = (
                 <ProfileBookList
@@ -133,6 +141,15 @@ class ProfileTop extends React.Component {
                     onClickDelete={this.deleteBook}
                 />
             );
+
+            reqList = (
+                <ProfileReqList
+                    handleTradeReq={this.handleTradeReq}
+                    reqList={this.state.userdata.tradeReqs}
+                />
+
+            );
+
         }
 
         var username = this.state.username;
@@ -141,6 +158,7 @@ class ProfileTop extends React.Component {
                 <h2>Username: {username}</h2>
                 {bookList}
                 <AddBook onClickAdd={this.addBook}/>
+                {reqList}
             </div>
         );
     }
