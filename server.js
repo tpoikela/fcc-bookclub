@@ -29,8 +29,8 @@ require('./server/config/passport')(passport);
 app.url = process.env.APP_URL;
 console.log('The full APP url: ' + app.url);
 
-mongoose.connect(process.env.MONGO_URI);
 mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGO_URI);
 
 // Initialize resource paths for the server
 app.use('/build', express.static(process.cwd() + '/build'));
