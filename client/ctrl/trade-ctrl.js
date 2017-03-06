@@ -10,29 +10,39 @@ class TradeCtrl {
         this.appUrl = url;
     }
 
+    /* Handles error in ajax, parsing the response and passing args to the
+     * callback. */
+    _processAjaxResp(err, respText, cb) {
+        if (err) {cb(err);}
+        else {
+            try {
+                var respObj = JSON.parse(respText);
+                cb(null, respObj);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
     /* Makes a trade request to the given book. */
-    makeTradeReq(username, book, cb) {
+    makeTradeReq(book, cb) {
         var url = this.appUrl + '/tradereq';
         var postData = {book: book};
 
         ajax.post(url, postData, (err, respText) => {
-            if (err) {cb(err);}
-            else {
-                try {
-                    var respObj = JSON.parse(respText);
-                    cb(null, respObj);
-                }
-                catch (e) {
-                    console.error(e);
-                }
-            }
+            this._processAjaxResp(err, respText, cb);
         });
 
     }
 
     /* Removes a trade request made by the same user .*/
-    removeTradeReq() {
-
+    removeTradeReq(tradeReq, cb) {
+        var url = this.appUrl + '/tradereq';
+        var postData = {tradeReq: tradeReq};
+        ajax.delete(url, postData, (err, respText) => {
+            this.processAjaxResp(err, respText, cb);
+        });
     }
 
     /* Sends accept trade request to the server. */
