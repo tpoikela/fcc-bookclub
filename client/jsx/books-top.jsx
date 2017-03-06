@@ -44,7 +44,15 @@ class BooksTop extends React.Component {
     /* Requests the given book with a trade request.*/
     requestBook(book) {
         console.log('Book with title ' + book.title + ' requested');
-
+        this.tradeCtrl.makeTradeReq(book, (err, data) => {
+            if (err) {
+                this.setState({msg: err});
+            }
+            else {
+                console.log('requestBook OK response: ' + JSON.stringify(data));
+                this.setState({msg: 'Your trade request was submitted.'});
+            }
+        });
     }
 
     render() {
