@@ -5,6 +5,8 @@ const expect = require('chai').expect;
 const User = require('../server/model/user-schema');
 const Book = require('../server/model/book-schema');
 
+mongoose.Promise = global.Promise;
+
 var TestUtils = {
 
     getObjectId: function() {
