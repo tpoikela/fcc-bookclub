@@ -8,11 +8,6 @@
     "ecmascript",
     "express"
   ],
-  "loadEagerly": [
-      "./server/**/*.js",
-      "./client/**/*.js",
-      "./test/**/*.js"
-  ],
   "plugins": {
     "node": {},
     "requirejs": {
