@@ -286,7 +286,15 @@ module.exports = function(app, passport) {
         .delete(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq');
             console.log('delete user ' + username);
-            res.status(500).json(errorInternal);
+            tradeController.removeTradeReq(username, req.body, err => {
+                if (err) {
+                    logError('DELETE /tradereq', err, req);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    res.status(200).json(requestOk);
+                }
+            });
         });
 
     //--------------------------------------
