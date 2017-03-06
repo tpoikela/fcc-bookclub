@@ -51,7 +51,7 @@ describe('Server-side TradeController', function() {
 
     });
 
-    it('Can accept a trade request', function() {
+    it('Removes a tradeRequest from a user', function() {
 
     });
 
