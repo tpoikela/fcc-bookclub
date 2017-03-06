@@ -8,6 +8,8 @@ var source = require('vinyl-source-stream');
 
 var nodemon = require('gulp-nodemon');
 
+var ctags = require('gulp-ctags');
+
 var spawn = require('child_process').spawn;
 
 var jsxDir = './client/jsx';
@@ -87,9 +89,15 @@ gulp.task('serve', function(cb) {
 });
 
 // Bit unusual task. Builds ctags-file for easier src navigation in Vim
-gulp.task('tags', function() {
+/* gulp.task('tags', function() {
     console.log('Building ctags for the project.');
     spawn('ctags', ['-R'].concat(paths.tags));
+}); */
+
+gulp.task('tags', function() {
+  return gulp.src(paths.tags)
+    .pipe(ctags({name: 'tags'}))
+    .pipe(gulp.dest('./'));
 });
 
 var watchDependents = [
