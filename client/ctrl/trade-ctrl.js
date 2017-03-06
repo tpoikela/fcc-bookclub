@@ -41,19 +41,27 @@ class TradeCtrl {
         var url = this.appUrl + '/tradereq';
         var postData = {tradeReq: tradeReq};
         ajax.delete(url, postData, (err, respText) => {
-            this.processAjaxResp(err, respText, cb);
+            this._processAjaxResp(err, respText, cb);
         });
     }
 
-    /* Sends accept trade request to the server. */
-    acceptTradeReq() {
-
+    /* Sends accept trade request with given book to the server. */
+    acceptTradeReq(tradeReq, book, cb) {
+        var url = this.appUrl + '/tradereq/accept';
+        var postData = {tradeReq: tradeReq, book: book};
+        ajax.post(url, postData, (err, respText) => {
+            this._processAjaxResp(err, respText, cb);
+        });
     }
 
     /* Sends reject trade request to the server. Essentially, a remove by
      * another user than the creator of request. */
-    rejectTradeReq() {
-
+    rejectTradeReq(tradeReq, cb) {
+        var url = this.appUrl + '/tradereq/reject';
+        var postData = {tradeReq: tradeReq};
+        ajax.post(url, postData, (err, respText) => {
+            this._processAjaxResp(err, respText, cb);
+        });
     }
 
 }
