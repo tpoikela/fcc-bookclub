@@ -118,14 +118,18 @@ UserSchema.statics.removeTradeReq = function(username, tradeReq, cb) {
 
     var pullObj = {
         $pull: {tradeReqs: {
-            'book.title': tradeReq.book.title,
-            createdOn: tradeReq.createdOn
+            'book.title': tradeReq.book.title
+            // createdOn: tradeReq.createdOn
         }}
     };
 
     User.update({username: username}, pullObj, (err, data) => {
         if (err) {cb(err);}
         else {
+            if (data.nModified === 0) {
+                console.warn('User.removeTradeReq no modifications done.');
+            }
+            console.log('removeTradeReq data: ' + JSON.stringify(data));
             cb(null, data);
         }
     });

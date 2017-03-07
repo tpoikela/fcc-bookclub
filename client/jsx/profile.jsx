@@ -46,7 +46,7 @@ class ProfileTop extends React.Component {
 
     /* Removes a book from the user. */
     onRemoveClick(appID) {
-        console.log('onRemoveClick with appID: ' + appID);
+        this.log('onRemoveClick(), appID: ' + appID);
         var url = appUrl + '/going';
         var data = {appID: appID, username: this.state.username,
             going: false, userID: this.state.userID};
@@ -87,11 +87,11 @@ class ProfileTop extends React.Component {
      * */
     getUserInfo() {
         var username = this.state.username;
-        console.log('Retrieving userinfo with name ' + username);
+        this.log('getUserInfo() with name ' + username);
         this.userCtrl.getUserProfileData(username, (err, data) => {
             if (err) {this.setState({error: 'An error occurred.'});}
             else {
-                this.log('ProfileTop got data: ' + JSON.stringify(data));
+                this.log('getUserInfo() got data: ' + JSON.stringify(data));
                 this.setState({userdata: data});
             }
         });
@@ -135,7 +135,7 @@ class ProfileTop extends React.Component {
         this.tradeCtrl.removeTradeReq(tradeReq, (err, resp) => {
             if (err) {this.setState({error: err});}
             else {
-                this.jsonLog('deleteBook response data', resp);
+                this.jsonLog('handleTradeReq() resp: ', resp);
                 this.getUserInfo();
             }
         });

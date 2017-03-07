@@ -46,6 +46,7 @@ class TradeController {
         if (tradeReq) {
             var book = tradeReq.book;
             if (book) {
+                debug('Removing tradeReq from user ' + username);
                 User.removeTradeReq(username, tradeReq, err => {
                     if (err) {cb(err);}
                     else {

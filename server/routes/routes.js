@@ -23,6 +23,11 @@ var reqDebug = function(req) {
 	_log('\t\tQuery:' + JSON.stringify(req.query));
 };
 
+const _u = function(username) {
+    return '|' + username + '|';
+
+};
+
 var notAuthorized = {msg: 'Operation not authorized. Log in first.'};
 var errorInternal = {msg: 'Server internal error.'};
 var errorForbidden = {msg: 'Requested action forbidden.'};
@@ -207,7 +212,7 @@ module.exports = function(app, passport) {
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
             var bookTitle = req.body.title;
-            _log('Server got POST-req to /book. User: ' + username);
+            _log('Server got POST-req to /book. User: ' + _u(username));
             if (username === req.user.username) {
                 var bookData = {username: username, title: bookTitle};
                 bookController.addBook(bookData, (err, bookData) => {
@@ -257,7 +262,7 @@ module.exports = function(app, passport) {
     app.route('/tradereq/accept')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq/accept');
-            console.log('accept user ' + username);
+            console.log('accept user ' + _u(username));
             res.status(500).json(errorInternal);
 
         });
@@ -265,7 +270,7 @@ module.exports = function(app, passport) {
     app.route('/tradereq/reject')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, 'tradereq/reject');
-            console.log('reject user ' + username);
+            console.log('reject user ' + _u(username));
             res.status(500).json(errorInternal);
 
         });
@@ -285,7 +290,7 @@ module.exports = function(app, passport) {
         })
         .delete(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq');
-            console.log('delete user ' + username);
+            debug('delete /tradereq, for user ' + _u(username));
             tradeController.removeTradeReq(username, req.body, err => {
                 if (err) {
                     logError('DELETE /tradereq', err, req);
