@@ -40,9 +40,33 @@ class TradeController {
     }
 
     /* Removes a trade request from the given user.*/
-    /* removeTradeReq(username, reqBody, cb) {
-
-    }*/
+    removeTradeReq(username, reqBody, cb) {
+        var err;
+        var tradeReq = reqBody.tradeReq;
+        if (tradeReq) {
+            var book = tradeReq.book;
+            if (book) {
+                User.removeTradeReq(username, tradeReq, err => {
+                    if (err) {cb(err);}
+                    else {
+                        var obj = {_id: book._id, tradeReq: tradeReq};
+                        Book.removeTradeReq(obj, err => {
+                            if (err) {cb(err);}
+                            else {cb(null);}
+                        });
+                    }
+                });
+            }
+            else {
+                err = new Error('No book in tradeReq');
+                cb(err);
+            }
+        }
+        else {
+            err = new Error('No tradeReq in req.body');
+            cb(err);
+        }
+    }
 
     /* acceptTradeReq(username, reqBody, cb) {
 
