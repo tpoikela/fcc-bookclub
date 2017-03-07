@@ -4,8 +4,11 @@ var React = require('react');
 
 const appUrl = window.location.origin;
 const ajax = require('../common/ajax-functions.js');
+
 const UserCtrl = require('../ctrl/user-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
+const TradeCtrl = require('../ctrl/trade-ctrl');
+
 const ProfileBookList = require('./book-list');
 const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
@@ -17,10 +20,12 @@ class ProfileTop extends React.Component {
         super(props);
         this.userCtrl = new UserCtrl(appUrl);
 		this.bookCtrl = new BookCtrl(appUrl);
+		this.tradeCtrl = new TradeCtrl(appUrl);
 
         this.onRemoveClick = this.onRemoveClick.bind(this);
         this.addBook = this.addBook.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
+        this.handleTradeReq = this.handleTradeReq.bind(this);
 
         this.state = {
             userdata: null,
@@ -125,8 +130,15 @@ class ProfileTop extends React.Component {
         });
     }
 
+    /* Handles the given tradeRequest. */
     handleTradeReq(tradeReq) {
-
+        this.tradeCtrl.removeTradeReq(tradeReq, (err, resp) => {
+            if (err) {this.setState({error: err});}
+            else {
+                this.jsonLog('deleteBook response data', resp);
+                this.getUserInfo();
+            }
+        });
     }
 
     render() {
