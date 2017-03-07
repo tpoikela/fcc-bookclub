@@ -61,6 +61,25 @@ BookSchema.statics.addTradeReq = function(obj, cb) {
     });
 };
 
+/* Removes one trade request from a user.*/
+BookSchema.statics.removeTradeReq = function(obj, cb) {
+    var Book = this.model('Book');
+    var tradeReq = obj.tradeReq;
+
+    var pullObj = {
+        $pull: {tradeReqs: {
+            createdOn: tradeReq.createdOn
+        }}
+    };
+
+    Book.update({_id: obj._id}, pullObj, (err, data) => {
+        if (err) {cb(err);}
+        else {
+            cb(null, data);
+        }
+    });
+};
+
 //---------------------------------------------------------------------------
 // INSTANCE METHODS
 //---------------------------------------------------------------------------
