@@ -100,6 +100,9 @@ UserSchema.statics.getUserID = function(username, cb) {
 /* Adds one trade request for this user. */
 UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
+    if (!tradeReq.createdOn) {
+        tradeReq.createdOn = new Date();
+    }
     var pushObj = {$push: {tradeReqs: tradeReq}};
     User.update({username: username}, pushObj, (err, data) => {
         if (err) {cb(err);}
@@ -109,9 +112,17 @@ UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
     });
 };
 
+/* Removes one trade request from a user.*/
 UserSchema.statics.removeTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
-    var pullObj = {$pull: {tradeReqs: {'book.title': tradeReq.book.title}}};
+
+    var pullObj = {
+        $pull: {tradeReqs: {
+            'book.title': tradeReq.book.title,
+            createdOn: tradeReq.createdOn
+        }}
+    };
+
     User.update({username: username}, pullObj, (err, data) => {
         if (err) {cb(err);}
         else {
