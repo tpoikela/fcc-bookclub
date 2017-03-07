@@ -29,6 +29,7 @@ class ProfileReqList extends React.Component {
 
         return (
             <div className='prof-req-list'>
+                <p>You have requested to trade the following books:</p>
                 <ul>
                 {reqElems}
                 </ul>
@@ -38,13 +39,11 @@ class ProfileReqList extends React.Component {
 
     }
 
-
 }
 
 ProfileReqList.propTypes = {
     reqList: React.PropTypes.array,
     handleTradeReq: React.PropTypes.func
-
 };
 
 module.exports = ProfileReqList;
