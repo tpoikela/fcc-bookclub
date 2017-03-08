@@ -14,7 +14,6 @@ class ModalViewReq extends React.Component {
         this.rejectReq = this.rejectReq.bind(this);
     }
 
-
     acceptReq() {
         this.props.acceptReq();
     }
@@ -47,7 +46,10 @@ class ModalViewReq extends React.Component {
                         />
 
                         <div className='modal-body row'>
-                            <p>BODY XXXXXXXXXXXXXXXX</p>
+                            <p>You've received a trade request. You can choose
+                                one of the following books and click Accept,
+                                or you can reject the trade by clicking Reject.
+                            </p>
                         </div>
 
                         <div className='modal-footer row'>
@@ -69,7 +71,11 @@ class ModalViewReq extends React.Component {
                                     Reject
                                 </button>
 
-                                <button data-dismiss='modal' type='button'>
+                                <button
+                                    className='btn btn-secondary'
+                                    data-dismiss='modal'
+                                    type='button'
+                                    >
                                     Close
                                 </button>
 
