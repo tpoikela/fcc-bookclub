@@ -9,9 +9,11 @@ const UserCtrl = require('../ctrl/user-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
 const TradeCtrl = require('../ctrl/trade-ctrl');
 
-const ProfileBookList = require('./book-list');
+const BookList = require('./book-list');
 const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
+
+const ModalViewReq = require('./modal-view-req');
 
 /* This component is used at the profile page of a user.*/
 class ProfileTop extends React.Component {
@@ -25,6 +27,10 @@ class ProfileTop extends React.Component {
         this.onRemoveClick = this.onRemoveClick.bind(this);
         this.addBook = this.addBook.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
+
+
+        this.acceptTradeReq = this.acceptTradeReq.bind(this);
+        this.rejectTradeReq = this.rejectTradeReq.bind(this);
         this.handleTradeReq = this.handleTradeReq.bind(this);
 
         this.state = {
@@ -141,15 +147,41 @@ class ProfileTop extends React.Component {
         });
     }
 
+    /* Called when user accepts a trade request with a given book.*/
+    acceptTradeReq(book, tradeReq) {
+        this.tradeCtrl.acceptTradeReq(tradeReq, (err, resp) => {
+            if (err) {this.setState({error: err});}
+            else {
+                this.jsonLog('rejectTradeReq() resp: ', resp);
+                this.getUserInfo();
+            }
+        });
+    }
+
+    /* Called when user rejects a trade request. */
+    rejectTradeReq(tradeReq) {
+        this.tradeCtrl.rejectTradeReq(tradeReq, (err, resp) => {
+            if (err) {this.setState({error: err});}
+            else {
+                this.jsonLog('rejectTradeReq() resp: ', resp);
+                this.getUserInfo();
+            }
+        });
+    }
+
     render() {
         var bookList = null;
         var reqList = null;
         // var contactInfo = null;
+        //
+
+        var modalId = 'modal-view-req';
 
         if (this.state.userdata) {
             bookList = (
-                <ProfileBookList
+                <BookList
                     books={this.state.userdata.bookList}
+                    modalId={modalId}
                     onClickDelete={this.deleteBook}
                 />
             );
@@ -171,6 +203,13 @@ class ProfileTop extends React.Component {
                 {bookList}
                 <AddBook onClickAdd={this.addBook}/>
                 {reqList}
+
+                <ModalViewReq
+                    acceptReq={this.acceptTradeReq}
+                    id={modalId}
+                    rejectReq={this.rejectTradeReq}
+                    tradeReq={this.state.tradeReqSelected}
+                />
             </div>
         );
     }
