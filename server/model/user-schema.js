@@ -101,7 +101,7 @@ UserSchema.statics.getUserID = function(username, cb) {
 UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
     if (!tradeReq.createdOn) {
-        tradeReq.createdOn = new Date();
+        tradeReq.createdOn = new Date().toISOString();
     }
     var pushObj = {$push: {tradeReqs: tradeReq}};
     User.update({username: username}, pushObj, (err, data) => {
@@ -133,6 +133,55 @@ UserSchema.statics.removeTradeReq = function(username, tradeReq, cb) {
             cb(null, data);
         }
     });
+};
+
+/* Sets the state of given tradeReq as accepted. tradeReq is identified by
+ * createdOn date.*/
+UserSchema.statics.acceptTradeReq = function(username, tradeReq, cb) {
+    var User = this.model('User');
+    var queryObj = {
+        username: username,
+        'tradeReqs.createdOn': tradeReq.createdOn
+    };
+    var setObj = {
+        $set: {
+            'tradeReqs.$.state': 'Accepted'
+        }
+    };
+    User.update(queryObj, setObj, (err, data) => {
+        if (err) {cb(err);}
+        else {
+            if (data.nModified === 0) {
+                console.warn('User.acceptTradeReq no modifications done.');
+            }
+            cb(null, data);
+        }
+    });
+};
+
+/* Sets the state of given tradeReq as rejected. tradeReq is identified by
+ * createdOn date.*/
+UserSchema.statics.rejectTradeReq = function(username, tradeReq, cb) {
+    var User = this.model('User');
+    var queryObj = {
+        username: username,
+        'tradeReqs.createdOn': tradeReq.createdOn
+    };
+    var setObj = {
+        $set: {
+            'tradeReqs.$.state': 'Rejected'
+        }
+    };
+    User.update(queryObj, setObj, (err, data) => {
+        if (err) {cb(err);}
+        else {
+            if (data.nModified === 0) {
+                console.warn('User.rejectTradeReq no modifications done.');
+            }
+            cb(null, data);
+        }
+    });
+
 };
 
 //---------------------------------------------------------------------------
