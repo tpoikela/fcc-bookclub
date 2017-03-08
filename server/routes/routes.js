@@ -262,8 +262,17 @@ module.exports = function(app, passport) {
     app.route('/tradereq/accept')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq/accept');
-            console.log('accept user ' + _u(username));
-            res.status(500).json(errorInternal);
+            tradeController.acceptTradeReq(username, req.body, err => {
+                if (err) {
+                    logError('POST /tradereq/accept', err, req);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    console.log('accept user ' + _u(username));
+                    res.status(200).json(requestOk);
+                }
+
+            });
 
         });
 
