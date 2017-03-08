@@ -23,7 +23,7 @@ class ProfileReqList extends React.Component {
             return (<li key={index}>
                 From: {item.from} <br/>
                 Book: {item.book.title}
-                <button onClick={callback}>Delete</button>
+                <button onClick={callback}>Delete request</button>
             </li>
             );
         });
