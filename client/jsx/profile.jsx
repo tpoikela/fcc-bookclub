@@ -32,13 +32,20 @@ class ProfileTop extends React.Component {
         this.acceptTradeReq = this.acceptTradeReq.bind(this);
         this.rejectTradeReq = this.rejectTradeReq.bind(this);
         this.handleTradeReq = this.handleTradeReq.bind(this);
+        this.selectTradeReq = this.selectTradeReq.bind(this);
 
         this.state = {
             userdata: null,
             username: null,
             userID: null,
-            error: null
+            error: null,
+            tradeReqSelected: null
         };
+    }
+
+    error(err) {
+        console.error('ProfileTop [ERROR] ' + err);
+        this.setState({error: err});
     }
 
     log(msg) {
@@ -58,7 +65,7 @@ class ProfileTop extends React.Component {
             going: false, userID: this.state.userID};
         ajax.post(url, data, (err, respText) => {
             if (err) {
-                this.setState({error: 'An error occurred.'});
+                this.error(err);
             }
             else {
                 this.log('ajax.post resp OK: ' + respText);
@@ -73,7 +80,7 @@ class ProfileTop extends React.Component {
     checkAuthorisation() {
         this.userCtrl.amIAuthorized( (err, data) => {
             if (err) {
-                this.setState({error: 'Error occurred, Please refresh.'});
+                this.error(err);
             }
             else {
                 this.setState({
@@ -95,7 +102,7 @@ class ProfileTop extends React.Component {
         var username = this.state.username;
         this.log('getUserInfo() with name ' + username);
         this.userCtrl.getUserProfileData(username, (err, data) => {
-            if (err) {this.setState({error: 'An error occurred.'});}
+            if (err) {this.error(err);}
             else {
                 this.log('getUserInfo() got data: ' + JSON.stringify(data));
                 this.setState({userdata: data});
@@ -113,13 +120,10 @@ class ProfileTop extends React.Component {
         var bookData = {username: this.state.username,
             title: bookName};
         this.bookCtrl.addBook(bookData, (err, resp) => {
-                if (err) {this.setState({error: err});}
+                if (err) {this.error(err);}
                 else {
                     this.jsonLog('addBook response data', resp);
-                    // var data = this.state.userdata;
-                    // data.bookList.push(resp);
                     this.getUserInfo();
-                    // this.setState({userdata: data});
                 }
         });
     }
@@ -128,7 +132,7 @@ class ProfileTop extends React.Component {
     deleteBook(bookData) {
         this.jsonLog('deleteBook sending data', bookData);
         this.bookCtrl.deleteBook(bookData, (err, resp) => {
-            if (err) {this.setState({error: err});}
+            if (err) {this.error(err);}
             else {
                 this.jsonLog('deleteBook response data', resp);
                 this.getUserInfo();
@@ -139,7 +143,7 @@ class ProfileTop extends React.Component {
     /* Handles the given tradeRequest. */
     handleTradeReq(tradeReq) {
         this.tradeCtrl.removeTradeReq(tradeReq, (err, resp) => {
-            if (err) {this.setState({error: err});}
+            if (err) {this.error(err);}
             else {
                 this.jsonLog('handleTradeReq() resp: ', resp);
                 this.getUserInfo();
@@ -149,8 +153,24 @@ class ProfileTop extends React.Component {
 
     /* Called when user accepts a trade request with a given book.*/
     acceptTradeReq(book, tradeReq) {
-        this.tradeCtrl.acceptTradeReq(tradeReq, (err, resp) => {
-            if (err) {this.setState({error: err});}
+        if (this.state.tradeReqSelected !== null) {
+            this.tradeCtrl.acceptTradeReq(tradeReq, (err, resp) => {
+                if (err) {this.error(err);}
+                else {
+                    this.jsonLog('rejectTradeReq() resp: ', resp);
+                    this.getUserInfo();
+                }
+            });
+        }
+        else {
+            this.error('No trade request selected.');
+        }
+    }
+
+    /* Called when user rejects a trade request. */
+    rejectTradeReq(tradeReq) {
+        this.tradeCtrl.rejectTradeReq(tradeReq, (err, resp) => {
+            if (err) {this.error(err);}
             else {
                 this.jsonLog('rejectTradeReq() resp: ', resp);
                 this.getUserInfo();
@@ -158,15 +178,9 @@ class ProfileTop extends React.Component {
         });
     }
 
-    /* Called when user rejects a trade request. */
-    rejectTradeReq(tradeReq) {
-        this.tradeCtrl.rejectTradeReq(tradeReq, (err, resp) => {
-            if (err) {this.setState({error: err});}
-            else {
-                this.jsonLog('rejectTradeReq() resp: ', resp);
-                this.getUserInfo();
-            }
-        });
+    /* Selects the trade request to be shown by <ModalViewReq>. */
+    selectTradeReq(tradeReq) {
+        this.setState({tradeReqSelected: tradeReq});
     }
 
     render() {
@@ -183,6 +197,7 @@ class ProfileTop extends React.Component {
                     books={this.state.userdata.bookList}
                     modalId={modalId}
                     onClickDelete={this.deleteBook}
+                    selectTradeReq={this.selectTradeReq}
                 />
             );
 
