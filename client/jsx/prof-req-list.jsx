@@ -17,6 +17,7 @@ class ProfileReqList extends React.Component {
     render() {
         var reqList = this.props.reqList;
         var reqElems = null;
+
         reqElems = reqList.map( (item, index) => {
             var callback = this.handleTradeReq.bind(this, item);
             return (<li key={index}>
@@ -42,8 +43,8 @@ class ProfileReqList extends React.Component {
 }
 
 ProfileReqList.propTypes = {
-    reqList: React.PropTypes.array,
-    handleTradeReq: React.PropTypes.func
+    handleTradeReq: React.PropTypes.func,
+    reqList: React.PropTypes.array
 };
 
 module.exports = ProfileReqList;
