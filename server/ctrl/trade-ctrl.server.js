@@ -6,6 +6,16 @@ const debug = require('debug')('book:trade-ctrl');
 
 const _json = obj => {return JSON.stringify(obj);};
 
+const createTradeReq = (username, book) => {
+    return {
+        createdOn: new Date(),
+        from: username,
+        book: book,
+        state: 'Pending'
+    };
+
+};
+
 /* TradeController adds and removes trade requests from the DB. It also
  * processes accepted and rejected trade requests.*/
 class TradeController {
@@ -13,11 +23,7 @@ class TradeController {
     /* Adds one trade request into the system. */
     addTradeReq(username, reqBody, cb) {
         var book = reqBody.book;
-        var tradeReq = {
-            createdOn: new Date(),
-            from: username,
-            book: book
-        };
+        var tradeReq = createTradeReq(username, book);
 
         debug('Adding req ' + _json(tradeReq) + ' for user ' + username);
         User.addTradeReq(username, tradeReq, err => {
@@ -69,9 +75,19 @@ class TradeController {
         }
     }
 
-    /* acceptTradeReq(username, reqBody, cb) {
+    /* Accepts a tradeReq. Note that the username here is the accepting user and
+     * not the one who requested the trade. */
+    acceptTradeReq(username, reqBody, cb) {
+        var tradeReq = reqBody.tradeReq;
+        var reqOwner = tradeReq.from;
+        User.acceptTradeReq(reqOwner, tradeReq, err => {
+            if (err) {cb(err);}
+            else {
+                // Modify the req state in the book
 
-    }*/
+            }
+        });
+    }
 
     /* rejectTradeReq(username, reqBody, cb) {
 
