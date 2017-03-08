@@ -1,4 +1,3 @@
-
 'use strict';
 
 const ajax = require('../common/ajax-functions');
@@ -47,14 +46,22 @@ class TradeCtrl {
     }
 
     /* Sends accept trade request to the server. */
-    acceptTradeReq() {
-
+    acceptTradeReq(tradeReq, book, cb) {
+        var url = this.appUrl + '/tradereq/accept';
+        var postData = {book: book, tradeReq: tradeReq};
+        ajax.post(url, postData, (err, respText) => {
+            this._processAjaxResp(err, respText, cb);
+        });
     }
 
     /* Sends reject trade request to the server. Essentially, a remove by
      * another user than the creator of request. */
-    rejectTradeReq() {
-
+    rejectTradeReq(tradeReq, cb) {
+        var url = this.appUrl + '/tradereq/reject';
+        var postData = {tradeReq: tradeReq};
+        ajax.post(url, postData, (err, respText) => {
+            this._processAjaxResp(err, respText, cb);
+        });
     }
 
 }
