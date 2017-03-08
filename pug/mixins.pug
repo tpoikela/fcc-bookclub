@@ -1,7 +1,11 @@
 //- This file contains mixins used in all .pug files. This helps making layouts
 //- more unified across all different pages, and helps in following DRY.
 
-- var bs = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css";
+- var bsCdn = "https://maxcdn.bootstrapcdn.com";
+- var bs = bsCdn + "/bootstrap/3.3.2/css/bootstrap.min.css";
+- var bsJs = bsCdn + "/bootstrap/3.3.2/js/bootstrap.min.js"
+- var bsTheme = bsCdn + "/bootstrap/3.3.2/css/bootstrap-theme.min.css";
+- var jqueryJs = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js";
 - var domain = "http://127.0.0.1";
 - var appTitle = 'BookWyrms';
 
@@ -14,10 +18,13 @@ mixin metaProps()
 
 mixin styleSheets()
     link(href="" + bs rel="stylesheet" type="text/css")
+    link(href="" + bsTheme rel="stylesheet" type="text/css")
     link(href="/build/main.css" rel="stylesheet" type="text/css")
     link(href="/public/css/font-awesome.css" rel="stylesheet" type="text/css")
 
 mixin scripts()
+  script(src="" + jqueryJs)
+  script(src="" + bsJs)
   //-script(src="https://fb.me/react-15.2.1.min.js")
   //-script(src="https://fb.me/react-dom-15.2.1.min.js")
 
