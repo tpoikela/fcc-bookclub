@@ -11,6 +11,7 @@ class BookItem extends React.Component {
         this.onClickAccept = this.onClickAccept.bind(this);
         this.onClickReject = this.onClickReject.bind(this);
         this.onClickView = this.onClickView.bind(this);
+        this.selectTradeReq = this.selectTradeReq.bind(this);
     }
 
     onClickDelete() {
@@ -29,6 +30,10 @@ class BookItem extends React.Component {
 
     }
 
+    selectTradeReq(tradeReq) {
+        this.props.selectTradeReq(tradeReq);
+    }
+
     render() {
         var book = this.props.book;
         var tradeReqs = book.tradeReqs;
@@ -36,6 +41,7 @@ class BookItem extends React.Component {
         var modalId = '#' + this.props.modalId;
 
         reqElem = tradeReqs.map( (item, index) => {
+            var selectTradeReq = this.selectTradeReq.bind(this, item);
             return (
                 <div key={index}>
                     Request on {item.createdOn}.<br/>
@@ -44,6 +50,7 @@ class BookItem extends React.Component {
                         className='btn btn-secondary btn-warning'
                         data-target={modalId}
                         data-toggle='modal'
+                        onClick={selectTradeReq}
                         type='button'
                         >
                         View Request
@@ -61,7 +68,9 @@ class BookItem extends React.Component {
                 <ul>
                     <li>
                         Title: {book.title}
-                        <button onClick={this.onClickDelete}>X</button>
+                        <button onClick={this.onClickDelete}>
+                            Delete book
+                        </button>
                         {reqElem}
                     </li>
                 </ul>
@@ -73,7 +82,8 @@ class BookItem extends React.Component {
 BookItem.propTypes = {
     book: React.PropTypes.object,
     modalId: React.PropTypes.string,
-    onClickDelete: React.PropTypes.func
+    onClickDelete: React.PropTypes.func,
+    selectTradeReq: React.PropTypes.func
 };
 
 module.exports = BookItem;
