@@ -80,13 +80,20 @@ class TradeController {
     acceptTradeReq(username, reqBody, cb) {
         var tradeReq = reqBody.tradeReq;
         var reqOwner = tradeReq.from;
-        User.acceptTradeReq(reqOwner, tradeReq, err => {
-            if (err) {cb(err);}
-            else {
-                // Modify the req state in the book
-
-            }
-        });
+        if (tradeReq.acceptedWith) {
+            User.acceptTradeReq(reqOwner, tradeReq, err => {
+                if (err) {cb(err);}
+                else {
+                    cb(null);
+                    // Modify the req state in the book
+                }
+            });
+        }
+        else {
+            var bookIdError = new Error(
+                'acceptTradeReq reqBody must have acceptedWith (bookID)');
+            cb(bookIdError);
+        }
     }
 
     /* rejectTradeReq(username, reqBody, cb) {
