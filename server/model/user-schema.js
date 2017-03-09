@@ -101,8 +101,9 @@ UserSchema.statics.getUserID = function(username, cb) {
 UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
     if (!tradeReq.createdOn) {
-        tradeReq.createdOn = new Date().toISOString();
+        tradeReq.createdOn = new Date();
     }
+    tradeReq.state = 'Pending';
     var pushObj = {$push: {tradeReqs: tradeReq}};
     User.update({username: username}, pushObj, (err, data) => {
         if (err) {cb(err);}
@@ -145,7 +146,8 @@ UserSchema.statics.acceptTradeReq = function(username, tradeReq, cb) {
     };
     var setObj = {
         $set: {
-            'tradeReqs.$.state': 'Accepted'
+            'tradeReqs.$.state': 'Accepted',
+            'tradeReqs.$.acceptedWith': tradeReq.acceptedWith
         }
     };
     User.update(queryObj, setObj, (err, data) => {
