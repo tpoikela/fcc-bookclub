@@ -18,6 +18,14 @@ class BookController {
         });
     }
 
+    /* Returns all books for given user.*/
+    getBooksForUser(username, cb) {
+        User.getBooksForUser(username, (err, user) => {
+            if (err) {cb(err);}
+            else {cb(null, user.bookList);}
+        });
+    }
+
     /* Adds one book to the database and for the user.*/
     addBook(updateObj, cb) {
         User.getUser(updateObj.username, (err, user) => {
