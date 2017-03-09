@@ -13,6 +13,8 @@ const BookList = require('./book-list');
 const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
 
+const $ = require('jquery');
+
 const ModalViewReq = require('./modal-view-req');
 
 /* This component is used at the profile page of a user.*/
@@ -28,18 +30,21 @@ class ProfileTop extends React.Component {
         this.addBook = this.addBook.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
 
-
         this.acceptTradeReq = this.acceptTradeReq.bind(this);
         this.rejectTradeReq = this.rejectTradeReq.bind(this);
         this.handleTradeReq = this.handleTradeReq.bind(this);
         this.selectTradeReq = this.selectTradeReq.bind(this);
 
+        this.modalId = 'modal-view-req';
+
         this.state = {
+            bookForReq: null,
             userdata: null,
             username: null,
             userID: null,
             error: null,
-            tradeReqSelected: null
+            tradeReqSelected: null,
+            reqBooks: []
         };
     }
 
@@ -112,6 +117,17 @@ class ProfileTop extends React.Component {
 
     componentDidMount() {
         this.checkAuthorisation();
+        this.getAllBooks();
+    }
+
+    /* Retrieves a full book list from the server. */
+    getAllBooks() {
+        this.bookCtrl.getAllBooks( (err, books) => {
+            if (err) {this.setState({msg: err});}
+            else {
+                this.setState({books: books});
+            }
+        });
     }
 
 	/* Adds one book for the user. */
@@ -152,8 +168,10 @@ class ProfileTop extends React.Component {
     }
 
     /* Called when user accepts a trade request with a given book.*/
-    acceptTradeReq(book, tradeReq) {
+    acceptTradeReq() {
         if (this.state.tradeReqSelected !== null) {
+            var tradeReq = this.state.tradeReqSelected;
+            tradeReq.acceptedWith = this.state.bookForReq;
             this.tradeCtrl.acceptTradeReq(tradeReq, (err, resp) => {
                 if (err) {this.error(err);}
                 else {
@@ -168,7 +186,8 @@ class ProfileTop extends React.Component {
     }
 
     /* Called when user rejects a trade request. */
-    rejectTradeReq(tradeReq) {
+    rejectTradeReq() {
+        var tradeReq = this.state.tradeReqSelected;
         this.tradeCtrl.rejectTradeReq(tradeReq, (err, resp) => {
             if (err) {this.error(err);}
             else {
@@ -180,7 +199,24 @@ class ProfileTop extends React.Component {
 
     /* Selects the trade request to be shown by <ModalViewReq>. */
     selectTradeReq(tradeReq) {
-        this.setState({tradeReqSelected: tradeReq});
+        this.bookCtrl.getBooksForUser(tradeReq.from, (err, data) => {
+            if (err) {this.error(err);}
+            else {
+                console.log('selectTradeReq' + JSON.stringify(data));
+                this.setState({
+                    reqBooks: data.books,
+                    tradeReqSelected: tradeReq
+                });
+                var $modal = $('#' + this.modalId);
+                if ($modal.hasOwnProperty('modal')) {
+                    $modal.modal('show');
+                }
+            }
+        });
+    }
+
+    selectBookForReq(book) {
+        this.setState({bookForReq: book});
     }
 
     render() {
@@ -189,13 +225,12 @@ class ProfileTop extends React.Component {
         // var contactInfo = null;
         //
 
-        var modalId = 'modal-view-req';
 
         if (this.state.userdata) {
             bookList = (
                 <BookList
                     books={this.state.userdata.bookList}
-                    modalId={modalId}
+                    modalId={this.modalId}
                     onClickDelete={this.deleteBook}
                     selectTradeReq={this.selectTradeReq}
                 />
@@ -221,8 +256,10 @@ class ProfileTop extends React.Component {
 
                 <ModalViewReq
                     acceptReq={this.acceptTradeReq}
-                    id={modalId}
+                    id={this.modalId}
                     rejectReq={this.rejectTradeReq}
+                    reqBooks={this.state.reqBooks}
+                    selectBookForReq={this.selectBookForReq}
                     tradeReq={this.state.tradeReqSelected}
                 />
             </div>
