@@ -12,6 +12,7 @@ class ModalViewReq extends React.Component {
 
         this.acceptReq = this.acceptReq.bind(this);
         this.rejectReq = this.rejectReq.bind(this);
+        this.selectBookForReq = this.selectBookForReq.bind(this);
     }
 
     acceptReq() {
@@ -22,10 +23,34 @@ class ModalViewReq extends React.Component {
         this.props.rejectReq();
     }
 
+    /* Selects which book is chosen for the tradeReq.*/
+    selectBookForReq(book) {
+        this.props.selectBookForReq(book);
+    }
+
+    shouldComponentUpdate() {
+        if (this.props.tradeReq !== null) {return true;}
+        return false;
+    }
+
+
     render() {
         var modalId = this.props.id;
         var titleText = 'View trade request';
-        // var tradeReq = this.props.tradeReq;
+        var reqBooks = this.props.reqBooks;
+        var tradeReq = this.props.tradeReq;
+
+        var bookList = reqBooks.map( (item, index) => {
+            var selectBook = this.selectBookForReq.bind(this, item);
+            return (
+                <div key={index}>
+                    {item.title}
+                    <button onClick={selectBook}>Select</button>
+                </div>
+            );
+        });
+
+        if (tradeReq === null) {return <div/>;}
 
         return (
             <div
@@ -50,6 +75,9 @@ class ModalViewReq extends React.Component {
                                 one of the following books and click Accept,
                                 or you can reject the trade by clicking Reject.
                             </p>
+                            <p>Request from: {tradeReq.from}</p>
+                            <p>You can pick one of the following books:</p>
+                            {bookList}
                         </div>
 
                         <div className='modal-footer row'>
@@ -93,7 +121,9 @@ ModalViewReq.propTypes = {
     id: React.PropTypes.string,
     tradeReq: React.PropTypes.object,
     acceptReq: React.PropTypes.func,
-    rejectReq: React.PropTypes.func
+    rejectReq: React.PropTypes.func,
+    reqBooks: React.PropTypes.array,
+    selectBookForReq: React.PropTypes.func
 };
 
 module.exports = ModalViewReq;
