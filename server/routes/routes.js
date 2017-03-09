@@ -6,7 +6,7 @@ var ctrlPath = path + '/server/ctrl';
 const UserController = require(ctrlPath + '/user-ctrl.server.js');
 const BookController = require(ctrlPath + '/book-ctrl.server.js');
 const TradeController = require(ctrlPath + '/trade-ctrl.server.js');
-const debug = require('debug')('book-routes');
+const debug = require('debug')('book:routes');
 
 var _log = function(msg) {
     console.log('[LOG@SERVER]: ' + msg);
@@ -38,6 +38,7 @@ module.exports = function(app, passport) {
     /* Renders a pug template.*/
     var renderPug = function(req, res, pugFile) {
         var isAuth = req.isAuthenticated();
+        debug('renderPug auth: ' + isAuth + ' file: ' + pugFile);
         res.render(path + '/pug/' + pugFile, {isAuth: isAuth});
     };
 
@@ -47,6 +48,7 @@ module.exports = function(app, passport) {
 			return next();
 		}
         else {
+            debug('Redirecting non-auth user to /login');
 			return res.redirect('/login');
 		}
 	};
@@ -253,6 +255,22 @@ module.exports = function(app, passport) {
                 res.status(400).json({msg: 'No proper body in DELETE'});
             }
 
+        });
+
+    app.route('/books/:username')
+        .get(isLoggedIn, (req, res) => {
+            var username = req.params.username;
+            debug('/books/:username with ' + username);
+            bookController.getBooksForUser(username, (err, books) => {
+                if (err) {
+                    logError('GET /books/:username with ' + username);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    var respObj = {books: books};
+                    res.status(200).json(respObj);
+                }
+            });
         });
 
     //----------------------------------
