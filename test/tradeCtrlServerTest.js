@@ -1,3 +1,4 @@
+'use strict';
 
 const TradeCtrl = require('../server/ctrl/trade-ctrl.server');
 const User = require('../server/model/user-schema');
@@ -52,6 +53,37 @@ describe('Server-side TradeController', function() {
     });
 
     it('Removes a tradeRequest from a user', function() {
+
+    });
+
+    it('Modifies tradeReq state if req accepted', function(done) {
+        var fromUsername = 'abcdefg';
+        var toUsername = 'userRequestedFrom';
+        var fromUser = Utils.createUser(fromUsername);
+        var toUser = Utils.createUser(toUsername);
+
+        var tradeReq = Utils.createTradeReq();
+        tradeReq.from = fromUsername;
+
+        Utils.saveUsers([fromUser, toUser], () => {
+            var reqBody = {
+                acceptedWith: Utils.createBook('Bible'),
+                tradeReq: tradeReq
+            };
+            tradeCtrl.acceptTradeReq(toUsername, reqBody, (err, data) => {
+                if (err) {throw new Error(err);}
+                else {
+                    expect(data.nModified).to.equal(1);
+                    done();
+                }
+
+            });
+
+        });
+
+    });
+
+    it('Modifies tradeReq state if req reject', function() {
 
     });
 
