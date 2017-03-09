@@ -186,6 +186,16 @@ UserSchema.statics.rejectTradeReq = function(username, tradeReq, cb) {
 
 };
 
+UserSchema.statics.getBooksForUser = function(username, cb) {
+    var User = this.model('User');
+    var queryObj = {username: username};
+    var filter = {username: 1, bookList: 1, _id: 0};
+    User.findOne(queryObj, filter, (err, user) => {
+        if (err) {cb(err);}
+        else {cb(null, user);}
+    });
+};
+
 //---------------------------------------------------------------------------
 // INSTANCE METHODS
 //---------------------------------------------------------------------------
