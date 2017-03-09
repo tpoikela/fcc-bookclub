@@ -32,7 +32,37 @@ class BookCtrl {
             }
 
         });
+    }
 
+    /* Gets a list of all books from the server. */
+    getAllBooks(cb) {
+        var url = this.appUrl + '/book';
+        this._ajaxGetBooks(url, cb);
+    }
+
+    /* Given username, retrieves all books for that user. This is mainly useful
+     * for trade requests. */
+    getBooksForUser(username, cb) {
+        var url = this.appUrl + '/books/' + username;
+        this._ajaxGetBooks(url, cb);
+    }
+
+    _ajaxGetBooks(url, cb) {
+        ajax.get(url, (err, respText) => {
+            if (err) {
+                cb(err);
+            }
+            else {
+                try {
+                    var books = JSON.parse(respText);
+                    cb(null, books);
+                }
+                catch (e) {
+                    var errMsg = 'An error occurred of type: ' + e.toString();
+                    cb(errMsg);
+                }
+            }
+        });
     }
 
 }
