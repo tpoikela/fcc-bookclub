@@ -26,6 +26,14 @@ var TestUtils = {
 
     clearTestDb: function(coll, cb) {
         mongoose.connection.db.dropCollection(coll, cb);
+    },
+
+    saveUsers: function(users, cb) {
+        User.collection.insert(users, err => {
+            expect(err).to.be.null;
+            if (err) {throw new Error(err);}
+            else {cb();}
+        });
     }
 };
 
