@@ -1,4 +1,4 @@
-fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
+fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" flags=S {
  LICENSE
  README.md
  TODO.md
@@ -83,6 +83,8 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" {
    book-item.jsx
    book-list.jsx
    books-top.jsx
+   modal-header.jsx
+   modal-view-req.jsx
    profile.jsx
    prof-req-list.jsx
    top.jsx
