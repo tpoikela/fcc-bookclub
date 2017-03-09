@@ -4,18 +4,20 @@ fcc-bookclub TODO list
 TODO
 ----
 
-The app/site is developed in stages. The list below describes the different
-milestones from the perspective of the user:
+The app/site is developed in stages. 
 
-  0. [X] A user can register and login into the site.
-  1. [X] A user can add books into his/her profile.
-  2. [X] A user can see a list of all books of all users.
-  3. [X] A user can remove books from his/her profile.
-  4. [X] A user can request a trade of certain book.
-  5. [X] A user can delete any of their requests.
-  6. [ ] A user can view all receiver requests (in modal)
-    - Modal should show the books to request back in a trade
-  7. [ ] A user can accept trade requests.
+List of user features:
+
+  0. [X] User can register and login into the site.
+  1. [X] User can add books into his/her profile.
+  2. [X] User can see a list of all books of all users.
+  3. [X] User can remove books from his/her profile.
+  4. [X] User can request a trade of certain book.
+  5. [X] User can delete any of their requests.
+  6. [X] User can view all receiver requests (in modal)
+    - [X] Modal should show the books to request back in a trade
+    - [ ] User can select any of the books shown.
+  7. [ ] User can accept trade requests.
     - [ ] Modify User data when accepted request arrives
     - [ ] Modify Book data when accepted request arrives
   8. [ ] A user can reject trade requests.
@@ -25,9 +27,6 @@ milestones from the perspective of the user:
   10. [ ] User can see covers of the books in all views
     - [ ] Hook up an external API (Google books)
     - [ ] Hook up an external API (Google books)
-
-DONE
-----
 
 The following Database schemas have been setup:
 
