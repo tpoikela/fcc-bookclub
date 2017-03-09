@@ -2,8 +2,9 @@
 'use strict';
 
 const React = require('react');
-const ajax = require('../common/ajax-functions');
+
 const TradeCtrl = require('../ctrl/trade-ctrl');
+const BookCtrl = require('../ctrl/book-ctrl');
 
 const appUrl = window.location.origin;
 
@@ -14,6 +15,7 @@ class BooksTop extends React.Component {
         this.requestBook = this.requestBook.bind(this);
 
         this.tradeCtrl = new TradeCtrl(appUrl);
+        this.bookCtrl = new BookCtrl(appUrl);
 
         this.state = {
             books: [],
@@ -22,22 +24,16 @@ class BooksTop extends React.Component {
     }
 
     componentDidMount() {
-        var url = appUrl + '/book';
-        ajax.get(url, (err, respText) => {
-            if (err) {
-                this.setState({msg: err});
-            }
-            else {
-                try {
-                    var books = JSON.parse(respText);
-                    this.setState({books: books});
-                }
-                catch (e) {
-                    console.error(e + ' with respText ' + respText);
-                    this.setState({msg: 'An error occurred.'});
-                }
-            }
+        this.getAllBooks();
+    }
 
+    /* Retrieves a full book list from the server. */
+    getAllBooks() {
+        this.bookCtrl.getAllBooks( (err, books) => {
+            if (err) {this.setState({msg: err});}
+            else {
+                this.setState({books: books});
+            }
         });
     }
 
@@ -56,17 +52,20 @@ class BooksTop extends React.Component {
     }
 
     render() {
-        var bookList = this.state.books.map( (item, index) => {
-            var onClick = this.requestBook.bind(this, item);
-            var style = {color: 'red', border: '1px solid black'};
-            return (
-                <div key={index} style={style}>
-                    <p>{item.title}</p>
-                    <button onClick={onClick}>Request</button>
-                </div>
-            );
+        var bookList = null;
+        if (this.state.books.length > 0) {
+            bookList = this.state.books.map( (item, index) => {
+                var onClick = this.requestBook.bind(this, item);
+                var style = {color: 'red', border: '1px solid black'};
+                return (
+                    <div key={index} style={style}>
+                        <p>{item.title}</p>
+                        <button onClick={onClick}>Request</button>
+                    </div>
+                );
 
-        });
+            });
+        }
 
         var msg = (<p>{this.state.msg}</p>);
 
