@@ -8,7 +8,7 @@ const _json = obj => {return JSON.stringify(obj);};
 
 const createTradeReq = (username, book) => {
     return {
-        createdOn: new Date(),
+        createdOn: new Date().toDateString(),
         from: username,
         book: book,
         state: 'Pending'
