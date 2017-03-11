@@ -46,9 +46,9 @@ class TradeCtrl {
     }
 
     /* Sends accept trade request to the server. */
-    acceptTradeReq(tradeReq, book, cb) {
+    acceptTradeReq(tradeReq, cb) {
         var url = this.appUrl + '/tradereq/accept';
-        var postData = {book: book, tradeReq: tradeReq};
+        var postData = {tradeReq: tradeReq};
         ajax.post(url, postData, (err, respText) => {
             this._processAjaxResp(err, respText, cb);
         });
