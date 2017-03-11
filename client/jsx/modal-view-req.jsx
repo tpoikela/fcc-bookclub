@@ -28,12 +28,6 @@ class ModalViewReq extends React.Component {
         this.props.selectBookForReq(book);
     }
 
-    shouldComponentUpdate() {
-        if (this.props.tradeReq !== null) {return true;}
-        return false;
-    }
-
-
     render() {
         var modalId = this.props.id;
         var titleText = 'View trade request';
@@ -42,15 +36,20 @@ class ModalViewReq extends React.Component {
 
         var bookList = reqBooks.map( (item, index) => {
             var selectBook = this.selectBookForReq.bind(this, item);
+            console.log('Item is ' + JSON.stringify(item));
             return (
                 <div key={index}>
-                    {item.title}
+                    <strong>Title: {item.title}</strong>
                     <button onClick={selectBook}>Select</button>
                 </div>
             );
         });
 
-        if (tradeReq === null) {return <div/>;}
+        // When modal not shown, tradeReq not defined for the 1st time
+        var reqFrom = '';
+        if (tradeReq !== null) {
+            reqFrom = tradeReq.from;
+        }
 
         return (
             <div
@@ -75,7 +74,7 @@ class ModalViewReq extends React.Component {
                                 one of the following books and click Accept,
                                 or you can reject the trade by clicking Reject.
                             </p>
-                            <p>Request from: {tradeReq.from}</p>
+                            <p>Request from: {reqFrom}</p>
                             <p>You can pick one of the following books:</p>
                             {bookList}
                         </div>
