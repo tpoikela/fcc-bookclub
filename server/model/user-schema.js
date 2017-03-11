@@ -69,9 +69,11 @@ var UserSchema = new Schema({
 // STATIC METHODS
 //---------------------------------------------------------------------------
 
+/* Returns the full document for given username. Doesn't populate. */
 UserSchema.statics.getUser = function(username, cb) {
+    var User = this.model('User');
     if (username) {
-        this.model('User').findOne({username: username}, (err, data) => {
+        User.findOne({username: username}, (err, data) => {
             if (err) {cb(err);}
             else if (data) {cb(null, data);}
             else {
@@ -88,7 +90,8 @@ UserSchema.statics.getUser = function(username, cb) {
 
 /* Calls given callback with user ID corresponding to the given username.*/
 UserSchema.statics.getUserID = function(username, cb) {
-    this.model('User').findOne({username: username}, (err, data) => {
+    var User = this.model('User');
+    User.findOne({username: username}, (err, data) => {
         if (err) {return cb(err);}
         if (data) {return cb(null, data._id);}
 
@@ -100,9 +103,7 @@ UserSchema.statics.getUserID = function(username, cb) {
 /* Adds one trade request for this user. */
 UserSchema.statics.addTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
-    if (!tradeReq.createdOn) {
-        tradeReq.createdOn = new Date();
-    }
+    tradeReq.createdOn = new Date().toDateString();
     tradeReq.state = 'Pending';
     var pushObj = {$push: {tradeReqs: tradeReq}};
     User.update({username: username}, pushObj, (err, data) => {
@@ -144,6 +145,8 @@ UserSchema.statics.acceptTradeReq = function(username, tradeReq, cb) {
         username: username,
         'tradeReqs.createdOn': tradeReq.createdOn
     };
+    console.log('acceptTradeReq looking for date ' + tradeReq.createdOn +
+        ' and user ' + username);
     var setObj = {
         $set: {
             'tradeReqs.$.state': 'Accepted',
@@ -186,14 +189,17 @@ UserSchema.statics.rejectTradeReq = function(username, tradeReq, cb) {
 
 };
 
+/* Returns all books for the given user. Does a populate. */
 UserSchema.statics.getBooksForUser = function(username, cb) {
     var User = this.model('User');
     var queryObj = {username: username};
     var filter = {username: 1, bookList: 1, _id: 0};
-    User.findOne(queryObj, filter, (err, user) => {
-        if (err) {cb(err);}
-        else {cb(null, user);}
-    });
+    User.findOne(queryObj, filter)
+        .populate('bookList')
+        .exec( (err, user) => {
+            if (err) {cb(err);}
+            else {cb(null, user);}
+        });
 };
 
 //---------------------------------------------------------------------------

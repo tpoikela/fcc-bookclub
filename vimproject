@@ -85,8 +85,8 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" flags=S {
    books-top.jsx
    modal-header.jsx
    modal-view-req.jsx
-   profile.jsx
    prof-req-list.jsx
+   profile.jsx
    top.jsx
   }
   common=common {
