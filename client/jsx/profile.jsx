@@ -13,8 +13,6 @@ const BookList = require('./book-list');
 const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
 
-const $ = require('jquery');
-
 const ModalViewReq = require('./modal-view-req');
 
 /* This component is used at the profile page of a user.*/
@@ -35,6 +33,7 @@ class ProfileTop extends React.Component {
         this.handleTradeReq = this.handleTradeReq.bind(this);
         this.selectTradeReq = this.selectTradeReq.bind(this);
 
+        this.selectBookForReq = this.selectBookForReq.bind(this);
         this.modalId = 'modal-view-req';
 
         this.state = {
@@ -202,15 +201,14 @@ class ProfileTop extends React.Component {
         this.bookCtrl.getBooksForUser(tradeReq.from, (err, data) => {
             if (err) {this.error(err);}
             else {
-                console.log('selectTradeReq' + JSON.stringify(data));
+                console.log('selectTradeReq(): user books '
+                    + JSON.stringify(data));
                 this.setState({
                     reqBooks: data.books,
                     tradeReqSelected: tradeReq
                 });
-                var $modal = $('#' + this.modalId);
-                if ($modal.hasOwnProperty('modal')) {
-                    $modal.modal('show');
-                }
+                console.log('selectTradeReq(): tradeReqSelected not null');
+                // TODO show modal
             }
         });
     }
@@ -225,6 +223,7 @@ class ProfileTop extends React.Component {
         // var contactInfo = null;
         //
 
+        console.log('<ProfileTop> render()');
 
         if (this.state.userdata) {
             bookList = (
