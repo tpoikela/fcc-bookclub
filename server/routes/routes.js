@@ -6,6 +6,7 @@ var ctrlPath = path + '/server/ctrl';
 const UserController = require(ctrlPath + '/user-ctrl.server.js');
 const BookController = require(ctrlPath + '/book-ctrl.server.js');
 const TradeController = require(ctrlPath + '/trade-ctrl.server.js');
+const BookSearch = require('../common/book-search');
 const debug = require('debug')('book:routes');
 
 var _log = function(msg) {
@@ -85,10 +86,16 @@ module.exports = function(app, passport) {
         }
     };
 
+    var debugJSON = function(msg, obj) {
+        debug(msg + ' ' + JSON.stringify(obj));
+    };
+
     // CONTROLLERS
     var userController = new UserController(path);
     var bookController = new BookController(path);
     var tradeController = new TradeController(path);
+
+    var bookSearch = new BookSearch({apiKey: process.env.API_KEY});
 
     //----------------------------------------------------------------------
     // ROUTES
@@ -255,6 +262,30 @@ module.exports = function(app, passport) {
                 res.status(400).json({msg: 'No proper body in DELETE'});
             }
 
+        });
+
+    /* Route for handling book searches via external API.*/
+    app.route('/books/search')
+        .post(isLoggedIn, (req, res) => {
+            var username = req.user.username;
+            var search = req.body.search;
+            debugJSON('/POST /books/search ', req.body);
+            if (search) {
+                bookSearch.search({word: search},
+                    (err, data) => {
+                        if (err) {
+                            logError('POST /books/search with ' + username);
+                            res.status(500).json(errorInternal);
+
+                        }
+                        else {
+                            res.status(200).json(data);
+                        }
+                    });
+            }
+            else {
+                res.status(400).json({msg: 'search post-param not found'});
+            }
         });
 
     app.route('/books/:username')
