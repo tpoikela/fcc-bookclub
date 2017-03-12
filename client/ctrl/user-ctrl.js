@@ -17,16 +17,17 @@ class UserController {
     }
 
     /* Sends ajax-get to server to check if user is authenticated. */
-    amIAuthorized(cb) {
+    amIAuthenticated(cb) {
         var url = this.appUrl + '/amiauth';
         ajax.get(url, (err, respText) => {
             if (err) {
-                this.reportError('amIAuthorized', err, url);
+                this.reportError('amIAuthenticated', err, url);
                 cb(err);
             }
             else {
                 var data = JSON.parse(respText);
-                console.log('userCtrl amIAuthorized() respText: ' + respText);
+                console.log('userCtrl amIAuthenticated() respText: '
+                    + respText);
                 cb(null, data);
             }
         });
