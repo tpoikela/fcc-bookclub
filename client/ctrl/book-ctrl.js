@@ -34,6 +34,17 @@ class BookCtrl {
         });
     }
 
+    searchBook(search, cb) {
+        var url = this.appUrl + '/books/search';
+        ajax.post(url, {search: search}, (err, respText) => {
+            if (err) {cb(err);}
+            else {
+                var respData = JSON.parse(respText);
+                cb(null, respData);
+            }
+        });
+    }
+
     /* Gets a list of all books from the server. */
     getAllBooks(cb) {
         var url = this.appUrl + '/book';
