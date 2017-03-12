@@ -141,18 +141,22 @@ UserSchema.statics.removeTradeReq = function(username, tradeReq, cb) {
  * createdOn date.*/
 UserSchema.statics.acceptTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
+
     var queryObj = {
         username: username,
         'tradeReqs.createdOn': tradeReq.createdOn
     };
     console.log('acceptTradeReq looking for date ' + tradeReq.createdOn +
         ' and user ' + username);
+
     var setObj = {
         $set: {
             'tradeReqs.$.state': 'Accepted',
-            'tradeReqs.$.acceptedWith': tradeReq.acceptedWith
+            'tradeReqs.$.acceptedWith': tradeReq.acceptedWith,
+            'tradeReqs.$.acceptedOn': new Date().toDateString()
         }
     };
+
     User.update(queryObj, setObj, (err, data) => {
         if (err) {cb(err);}
         else {
@@ -168,15 +172,19 @@ UserSchema.statics.acceptTradeReq = function(username, tradeReq, cb) {
  * createdOn date.*/
 UserSchema.statics.rejectTradeReq = function(username, tradeReq, cb) {
     var User = this.model('User');
+
     var queryObj = {
         username: username,
         'tradeReqs.createdOn': tradeReq.createdOn
     };
+
     var setObj = {
         $set: {
-            'tradeReqs.$.state': 'Rejected'
+            'tradeReqs.$.state': 'Rejected',
+            'tradeReqs.$.rejectedOn': new Date().toDateString()
         }
     };
+
     User.update(queryObj, setObj, (err, data) => {
         if (err) {cb(err);}
         else {

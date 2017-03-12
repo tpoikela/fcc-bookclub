@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const helmet = require('helmet');
 
 // App-specific requires
@@ -27,7 +27,7 @@ app.set('view engine', 'pug');
 require('./server/config/passport')(passport);
 
 app.url = process.env.APP_URL;
-console.log('The full APP url: ' + app.url);
+debug('The full APP url: ' + app.url);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI);
@@ -55,13 +55,13 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 routes(app, passport);
 
 var port = process.env.PORT || 8080;
 app.listen(port, () => {
-	console.log('BookWyrms Server listening on port ' + port + '...');
+	debug('BookWyrms Server listening on port ' + port + '...');
 });
 
 //---------------------------------------------------------------------------
