@@ -42,21 +42,12 @@ var UserSchema = new Schema({
 
     },
 
-    email: {
-        type: String
-    },
-
-    fullName: {
-        type: String
-    },
-
-    address: {
-        type: String
-    },
-
-    state: {
-        type: String
-    },
+    // Complementary (optional) user info
+    userAddress: {type: String},
+    userEmail: {type: String},
+    userFullname: {type: String},
+    userPostCode: {type: String},
+    userState: {type: String},
 
     bookList: [{type: ObjectId, ref: 'Book'}],
     tradeReqs: {type: Array}
