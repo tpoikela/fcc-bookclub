@@ -26,14 +26,15 @@ var reqDebug = function(req) {
 
 const _u = function(username) {
     return '|' + username + '|';
-
 };
 
+// Msg objects sent back to the client
 var notAuthorized = {msg: 'Operation not authorized. Log in first.'};
 var errorInternal = {msg: 'Server internal error.'};
 var errorForbidden = {msg: 'Requested action forbidden.'};
 var requestOk = {msg: 'Request was completed OK.'};
 
+/* Contains all routes for this application. */
 module.exports = function(app, passport) {
 
     /* Renders a pug template.*/
@@ -148,7 +149,6 @@ module.exports = function(app, passport) {
     app.route('/forms/signup')
         .post((req, res) => {
             debug('Got a signup form GET request..');
-            // reqDebug(req);
             userController.addLocalUser(req, res);
         });
 
@@ -162,16 +162,16 @@ module.exports = function(app, passport) {
                 userController.getUserID(data.username, (err, userID) => {
                     if (err) {
                         logError('/amiauth', err, req);
-                        res.json({error: 'Failed to authenticate'});
+                        res.status(500).json({error: 'Failed to authenticate'});
                     }
                     else {
                         data.userID = userID;
-                        res.json(data);
+                        res.status(200).json(data);
                     }
                 });
             }
             else {
-                res.json(data);
+                res.status(200).json(data);
             }
 		});
 
@@ -202,10 +202,27 @@ module.exports = function(app, passport) {
             }
         });
 
+    app.route('/user/update')
+        .post(isLoggedIn, (req, res) => {
+            var username = getUserName(req, '/user/update');
+            var userInfo = req.body;
+            debugJSON('/user/update ' + _u(username) + ' info: ', userInfo);
+            userController.updateUserInfo(username, userInfo, (err, data) => {
+                if (err) {
+                    logError('/user/update', err, req);
+                    res.status(500).json(errorInternal);
+                }
+                else {
+                    res.json(data);
+                }
+            });
+        });
+
     //--------------------------------------
     // Routes for the book data
     //--------------------------------------
     app.route('/book')
+
         .get(isLoggedIn, (req, res) => {
             var username = req.user.username;
             bookController.getBooks(username, (err, data) => {
@@ -218,19 +235,22 @@ module.exports = function(app, passport) {
                 }
             });
         })
+
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
-            var bookTitle = req.body.title;
+            var book = req.body.book;
             _log('Server got POST-req to /book. User: ' + _u(username));
+
             if (username === req.user.username) {
-                var bookData = {username: username, title: bookTitle};
+                var bookData = {username: username, book: book};
                 bookController.addBook(bookData, (err, bookData) => {
                     if (err) {
-                        logError('POST /book/' + bookTitle, err, req);
+                        var title = book.volumeInfo.title;
+                        logError('POST /book/' + title, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
-                        console.log('bookData is ' + JSON.stringify(bookData));
+                        debug('bookData is ' + JSON.stringify(bookData));
                         res.status(200).json(bookData);
                     }
                 });
@@ -238,7 +258,9 @@ module.exports = function(app, passport) {
             else {
                 res.status(403).json(notAuthorized);
             }
+
         })
+
         .delete(isLoggedIn, (req, res) => {
             if (req.body) {
                 var bookData = req.body;
@@ -270,9 +292,9 @@ module.exports = function(app, passport) {
             var username = req.user.username;
             var search = req.body.search;
             debugJSON('/POST /books/search ', req.body);
+
             if (search) {
-                bookSearch.search({word: search},
-                    (err, data) => {
+                bookSearch.search({word: search}, (err, data) => {
                         if (err) {
                             logError('POST /books/search with ' + username);
                             res.status(500).json(errorInternal);
@@ -286,8 +308,10 @@ module.exports = function(app, passport) {
             else {
                 res.status(400).json({msg: 'search post-param not found'});
             }
+
         });
 
+    /* Returns all books owned by the given user. */
     app.route('/books/:username')
         .get(isLoggedIn, (req, res) => {
             var username = req.params.username;
@@ -308,6 +332,7 @@ module.exports = function(app, passport) {
     // Routes for Trade Requests
     //----------------------------------
 
+    /* Accepts tradeReq. */
     app.route('/tradereq/accept')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq/accept');
@@ -317,7 +342,7 @@ module.exports = function(app, passport) {
                     res.status(500).json(errorInternal);
                 }
                 else {
-                    console.log('accept user ' + _u(username));
+                    debug('accept user ' + _u(username));
                     res.status(200).json(requestOk);
                 }
 
@@ -325,6 +350,7 @@ module.exports = function(app, passport) {
 
         });
 
+    /* Rejects tradeReq. */
     app.route('/tradereq/reject')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, 'tradereq/reject');
@@ -340,7 +366,9 @@ module.exports = function(app, passport) {
             });
         });
 
+    /* Add/delete tradeReqs. */
     app.route('/tradereq')
+
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq');
             tradeController.addTradeReq(username, req.body, err => {
@@ -353,6 +381,7 @@ module.exports = function(app, passport) {
                 }
             });
         })
+
         .delete(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/tradereq');
             debug('delete /tradereq, for user ' + _u(username));
