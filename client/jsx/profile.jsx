@@ -13,6 +13,7 @@ const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
 
 const ModalViewReq = require('./modal-view-req');
+const ContactInfo = require('./contact-info');
 
 /* This component is used at the profile page of a user. It shows all books
  * added by the user, and all requests for trade.*/
@@ -35,6 +36,10 @@ class ProfileTop extends React.Component {
 
         this.onClickShowProfile = this.onClickShowProfile.bind(this);
         this.onClickShowAddBooks = this.onClickShowAddBooks.bind(this);
+        this.onClickShowContactInfo = this.onClickShowContactInfo.bind(this);
+
+        this.onChangeContactInfo = this.onChangeContactInfo.bind(this);
+        this.onClickUpdateInfo = this.onClickUpdateInfo.bind(this);
 
         this.selectBookForReq = this.selectBookForReq.bind(this);
         this.modalId = 'modal-view-req';
@@ -42,10 +47,12 @@ class ProfileTop extends React.Component {
         this.state = {
             bookForReq: null,
             error: null,
+            input: {},
             reqBooks: [],
             searchResults: [],
             showProfile: true,
             showAddBooks: false,
+            showContactInfo: false,
             tradeReqSelected: null,
             userdata: null,
             username: null,
@@ -70,7 +77,8 @@ class ProfileTop extends React.Component {
     onClickShowProfile() {
         this.setState({
             showProfile: true,
-            showAddBooks: false
+            showAddBooks: false,
+            showContactInfo: false
         });
     }
 
@@ -78,13 +86,39 @@ class ProfileTop extends React.Component {
     onClickShowAddBooks() {
         this.setState({
             showProfile: false,
-            showAddBooks: true
+            showAddBooks: true,
+            showContactInfo: false
         });
     }
 
     /* Called when tabular view switched to contact info of the user.*/
     onClickShowContactInfo() {
+        this.setState({
+            showProfile: false,
+            showAddBooks: false,
+            showContactInfo: true
+        });
+    }
 
+    /* TODO: Updates the user contact information.*/
+    onClickUpdateInfo() {
+        this.log('onClickUpdateInfo() user updated contact info');
+        var info = this.state.input;
+        this.userCtrl.updateContactInfo(info, (err, data) => {
+            if (err) {this.error(err);}
+            else {
+                this.log('onClickUpdateInfo() got: ' + data);
+            }
+        });
+    }
+
+    /* Captures the input changes from child-components and stores them.*/
+    onChangeContactInfo(id, e) {
+        var newValue = e.target.value;
+        this.log('onChangeContactInfo id: ' + id + ' => ' + newValue);
+        var input = this.state.input;
+        input[id] = newValue;
+        this.setState({input: input});
     }
 
     /* Checks that user is properly authorised. */
@@ -137,10 +171,10 @@ class ProfileTop extends React.Component {
     }
 
 	/* Adds one book for the user. */
-    addBook(bookName) {
-        console.log('Book ' + bookName + ' will be added.');
+    addBook(book) {
+        console.log('Book ' + book.volumeInfo.title + ' will be added.');
         var bookData = {username: this.state.username,
-            title: bookName};
+            book: book};
         this.bookCtrl.addBook(bookData, (err, resp) => {
                 if (err) {this.error(err);}
                 else {
@@ -241,7 +275,6 @@ class ProfileTop extends React.Component {
     }
 
     render() {
-
         var username = this.state.username;
         var body = this.getCompBody();
         return (
@@ -254,6 +287,9 @@ class ProfileTop extends React.Component {
                     <button onClick={this.onClickShowAddBooks}>
                         Add books
                     </button>
+                    <button onClick={this.onClickShowContactInfo}>
+                        Contact details
+                    </button>
                 </div>
                 {body}
             </div>
@@ -262,61 +298,87 @@ class ProfileTop extends React.Component {
 
     getCompBody() {
         if (this.state.showProfile) {
-            var bookList = null;
-            var reqList = null;
-
-            console.log('<ProfileTop> getCompBody showProfile()');
-
-            if (this.state.userdata) {
-                bookList = (
-                    <BookList
-                        books={this.state.userdata.bookList}
-                        modalId={this.modalId}
-                        onClickDelete={this.deleteBook}
-                        selectTradeReq={this.selectTradeReq}
-                    />
-                );
-
-                reqList = (
-                    <ProfileReqList
-                        handleTradeReq={this.handleTradeReq}
-                        reqList={this.state.userdata.tradeReqs}
-                    />
-
-                );
-
-            }
-            return (
-                <div id='profile-view'>
-                    {bookList}
-                    {reqList}
-
-                    <ModalViewReq
-                        acceptReq={this.acceptTradeReq}
-                        id={this.modalId}
-                        rejectReq={this.rejectTradeReq}
-                        reqBooks={this.state.reqBooks}
-                        selectBookForReq={this.selectBookForReq}
-                        tradeReq={this.state.tradeReqSelected}
-                    />
-                </div>
-            );
-
+            return this.renderProfile();
+        }
+        else if (this.state.showAddBooks) {
+            return this.renderAddBooks();
+        }
+        else if (this.state.showContactInfo) {
+            return this.renderContactInfo();
         }
         else {
-            var searchResults = this.state.searchResults;
-            return (
-                <div id='search-view'>
-                    <p>Search for books to add to your profile.</p>
-                    <AddBook
-                        onClickAdd={this.addBook}
-                        onClickSearch={this.searchBook}
-                        searchResults={searchResults}
-                    />
-                </div>
-            );
+            throw new Error('Application error.');
         }
 
+    }
+
+
+    renderProfile() {
+        var bookList = null;
+        var reqList = null;
+
+        console.log('<ProfileTop> renderProfile()');
+
+        if (this.state.userdata) {
+            bookList = (
+                <BookList
+                    books={this.state.userdata.bookList}
+                    modalId={this.modalId}
+                    onClickDelete={this.deleteBook}
+                    selectTradeReq={this.selectTradeReq}
+                />
+            );
+
+            reqList = (
+                <ProfileReqList
+                    handleTradeReq={this.handleTradeReq}
+                    reqList={this.state.userdata.tradeReqs}
+                />
+
+            );
+
+        }
+        return (
+            <div id='profile-view'>
+                {bookList}
+                {reqList}
+
+                <ModalViewReq
+                    acceptReq={this.acceptTradeReq}
+                    id={this.modalId}
+                    rejectReq={this.rejectTradeReq}
+                    reqBooks={this.state.reqBooks}
+                    selectBookForReq={this.selectBookForReq}
+                    tradeReq={this.state.tradeReqSelected}
+                />
+            </div>
+        );
+    }
+
+    /* Renders the addBooks view.*/
+    renderAddBooks() {
+        var searchResults = this.state.searchResults;
+        return (
+            <div id='search-view'>
+                <p>Search for books to add to your profile.</p>
+                <AddBook
+                    onClickAdd={this.addBook}
+                    onClickSearch={this.searchBook}
+                    searchResults={searchResults}
+                />
+            </div>
+        );
+    }
+
+    /* Renders the contact info for the user.*/
+    renderContactInfo() {
+        return (
+            <ContactInfo
+                onChange={this.onChangeContactInfo}
+                onClickUpdate={this.onClickUpdateInfo}
+                {...this.state.userdata}
+            />
+        );
     }
 
 }
