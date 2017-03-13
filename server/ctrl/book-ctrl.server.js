@@ -31,7 +31,7 @@ class BookController {
         User.getUser(updateObj.username, (err, user) => {
             if (err) {cb(err);}
             else {
-                var obj = {title: updateObj.title};
+                var obj = updateObj.book;
                 Book.create(obj, (err, bookData) => {
                     if (err) {cb(err);}
                     else {
