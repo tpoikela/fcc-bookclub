@@ -111,17 +111,13 @@ module.exports = function(path) {
 
     /* Adds a venue where user is going. Needs appID and username to perform
      * the update.*/
-    this.updateUserVenueInfo = function(obj, cb) {
-        this.getUserByName( obj.username, (err, user) => {
-            if (err) { cb(err);}
-            else if (user) {
-                    if (obj.going) {user.addVenue(obj.venueID, cb);}
-                    else {user.removeVenue(obj.venueID, cb);}
-                }
-                else {
-                    // No user info was found
-                    cb(null, null);
-                }
+    this.updateUserInfo = function(username, info, cb) {
+        var updateObj = {$set: info};
+        User.update({username: username}, updateObj, (err, data) => {
+            if (err) {return cb(err);}
+            else {
+                return cb(null, data);
+            }
         });
     };
 
