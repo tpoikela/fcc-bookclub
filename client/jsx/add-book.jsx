@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-
+/* Component to add and search for books to be added to the profile.*/
 class AddBook extends React.Component {
 
     constructor(props) {
@@ -22,7 +22,7 @@ class AddBook extends React.Component {
     }
 
 	onClickAdd(book) {
-		this.props.onClickAdd(book.volumeInfo.title);
+		this.props.onClickAdd(book);
 	}
 
 	onClickSearch() {
