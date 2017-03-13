@@ -14,7 +14,7 @@ const BookSchema = Schema({
         type: String,
         required: true
     },
-
+    volumeInfo: {type: Object},
     year: {
         type: Number
     },
@@ -37,8 +37,10 @@ const BookSchema = Schema({
 BookSchema.statics.create = function(obj, cb) {
     var Book = this.model('Book');
     var newBook = new Book();
-    newBook.title = obj.title;
+    newBook.title = obj.volumeInfo.title;
+    newBook.volumeInfo = obj.volumeInfo;
     newBook.year = obj.year;
+
     newBook.author = obj.author;
     newBook.thumbnail = obj.thumbnail;
 
