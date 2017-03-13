@@ -48,6 +48,21 @@ class UserController {
         });
     }
 
+    /* Sends updated user info to the server. */
+    updateContactInfo(contactInfo, cb) {
+        var url = this.appUrl + '/user/update';
+        ajax.post(url, contactInfo, (err, respText) => {
+            if (err) {
+                this.reportError('updateContactInfo', err, url);
+                cb(err);
+            }
+            else {
+                var data = JSON.parse(respText);
+                cb(null, data);
+            }
+        });
+    }
+
 }
 
 module.exports = UserController;
