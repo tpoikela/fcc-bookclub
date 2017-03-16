@@ -5,6 +5,7 @@ const React = require('react');
 
 const TradeCtrl = require('../ctrl/trade-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
+const BookItem = require('./book-item');
 
 const appUrl = window.location.origin;
 
@@ -19,7 +20,8 @@ class BooksTop extends React.Component {
 
         this.state = {
             books: [],
-            msg: ''
+            msg: '',
+            booksPerPage: 20
         };
     }
 
@@ -54,12 +56,12 @@ class BooksTop extends React.Component {
     render() {
         var bookList = null;
         if (this.state.books.length > 0) {
-            bookList = this.state.books.map( (item, index) => {
-                var onClick = this.requestBook.bind(this, item);
+            bookList = this.state.books.map( (book, index) => {
+                var onClick = this.requestBook.bind(this, book);
                 var style = {color: 'red', border: '1px solid black'};
                 return (
                     <div key={index} style={style}>
-                        <p>{item.title}</p>
+                        <BookItem book={book} />
                         <button onClick={onClick}>Request</button>
                     </div>
                 );
