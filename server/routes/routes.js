@@ -152,8 +152,12 @@ module.exports = function(app, passport) {
             userController.addLocalUser(req, res);
         });
 
+    //----------------------------------------------------
+    // /users/ Routes for accessing/manipulating user data
+    //----------------------------------------------------
+
     // Called by client to check their authentication status
-	app.route('/amiauth')
+	app.route('/users/amiauth')
 		.get((req, res) => {
             var data = {isAuth: false};
             if (req.isAuthenticated()) {
@@ -161,7 +165,7 @@ module.exports = function(app, passport) {
                 data.username = req.user.username;
                 userController.getUserID(data.username, (err, userID) => {
                     if (err) {
-                        logError('/amiauth', err, req);
+                        logError('/users/amiauth', err, req);
                         res.status(500).json({error: 'Failed to authenticate'});
                     }
                     else {
@@ -175,17 +179,14 @@ module.exports = function(app, passport) {
             }
 		});
 
-    //----------------------------------
-    // Routes for manipulating user data
-    //----------------------------------
 
-    app.route('/user/:name')
+    app.route('/users/:name')
         .get(isLoggedIn, (req, res) => {
             var username = req.params.name;
             if (username === req.user.username) {
                 userController.getUserByName(username, (err, data) => {
                     if (err) {
-                        logError('/user/' + username, err, req);
+                        logError('/users/' + username, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
@@ -196,20 +197,20 @@ module.exports = function(app, passport) {
             }
             else {
                 // Forbidden
-                logError('/user/' + username,
+                logError('/users/' + username,
                     'Forbidden action attempted.', req);
                 res.status(403).json(errorForbidden);
             }
         });
 
-    app.route('/user/update')
+    app.route('/users/update')
         .post(isLoggedIn, (req, res) => {
             var username = getUserName(req, '/user/update');
             var userInfo = req.body;
-            debugJSON('/user/update ' + _u(username) + ' info: ', userInfo);
+            debugJSON('/users/update ' + _u(username) + ' info: ', userInfo);
             userController.updateUserInfo(username, userInfo, (err, data) => {
                 if (err) {
-                    logError('/user/update', err, req);
+                    logError('/users/update', err, req);
                     res.status(500).json(errorInternal);
                 }
                 else {
@@ -221,13 +222,13 @@ module.exports = function(app, passport) {
     //--------------------------------------
     // Routes for the book data
     //--------------------------------------
-    app.route('/book')
+    app.route('/books')
 
         .get(isLoggedIn, (req, res) => {
             var username = req.user.username;
             bookController.getBooks(username, (err, data) => {
                 if (err) {
-                    logError('GET /book/', err, req);
+                    logError('GET /books/', err, req);
                     res.status(500).json(errorInternal);
                 }
                 else {
@@ -239,14 +240,14 @@ module.exports = function(app, passport) {
         .post(isLoggedIn, (req, res) => {
             var username = req.body.username;
             var book = req.body.book;
-            _log('Server got POST-req to /book. User: ' + _u(username));
+            _log('Server got POST-req to /books. User: ' + _u(username));
 
             if (username === req.user.username) {
                 var bookData = {username: username, book: book};
                 bookController.addBook(bookData, (err, bookData) => {
                     if (err) {
                         var title = book.volumeInfo.title;
-                        logError('POST /book/' + title, err, req);
+                        logError('POST /books/' + title, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
@@ -268,11 +269,11 @@ module.exports = function(app, passport) {
                     username: req.user.username,
                     book: bookData
                 };
-                debug('Server got DELETE-req to /book. Data: '
+                debug('Server got DELETE-req to /books. Data: '
                     + JSON.stringify(bookData));
                 bookController.deleteBook(updateObj, (err) => {
                     if (err) {
-                        logError('DELETE /book/' + bookData, err, req);
+                        logError('DELETE /books/' + bookData, err, req);
                         res.status(500).json(errorInternal);
                     }
                     else {
@@ -400,16 +401,10 @@ module.exports = function(app, passport) {
     // User registration and authentication
     //--------------------------------------
 
-	app.route('/api/:id')
-		.get((req, res) => {
-            userController.getUser(req, res);
-		});
-
-    // Logs user in via form (after successful authentication
+    // Logs user in via form (after successful authentication)
 	app.route('/auth/userlogin')
         .post(passport.authenticate('local',
-            { failureRedirect: '/loginFailed' }),
-		(req, res) => {
+            { failureRedirect: '/loginFailed' }), (req, res) => {
 			res.redirect('/');
 		});
 
