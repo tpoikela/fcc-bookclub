@@ -108,6 +108,7 @@ class ProfileTop extends React.Component {
             if (err) {this.error(err);}
             else {
                 this.log('onClickUpdateInfo() got: ' + data);
+                this.getUserInfo();
             }
         });
     }
@@ -265,11 +266,11 @@ class ProfileTop extends React.Component {
                     tradeReqSelected: tradeReq
                 });
                 console.log('selectTradeReq(): tradeReqSelected not null');
-                // TODO show modal
             }
         });
     }
 
+    /* Selects the book for tradeReq (when accepted). */
     selectBookForReq(book) {
         this.setState({bookForReq: book});
     }
@@ -296,6 +297,8 @@ class ProfileTop extends React.Component {
         );
     }
 
+    /* Returns the rendered component body based on which button is
+     * selected.*/
     getCompBody() {
         if (this.state.showProfile) {
             return this.renderProfile();
