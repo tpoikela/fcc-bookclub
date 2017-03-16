@@ -18,7 +18,7 @@ class UserController {
 
     /* Sends ajax-get to server to check if user is authenticated. */
     amIAuthenticated(cb) {
-        var url = this.appUrl + '/amiauth';
+        var url = this.appUrl + '/users/amiauth';
         ajax.get(url, (err, respText) => {
             if (err) {
                 this.reportError('amIAuthenticated', err, url);
@@ -35,7 +35,7 @@ class UserController {
 
     /* Requests user profile data from the server.*/
     getUserProfileData(username, cb) {
-        var url = this.appUrl + '/user/' + username;
+        var url = this.appUrl + '/users/' + username;
         ajax.get(url, (err, respText) => {
             if (err) {
                 this.reportError('getUserProfileData', err, url);
@@ -50,7 +50,7 @@ class UserController {
 
     /* Sends updated user info to the server. */
     updateContactInfo(contactInfo, cb) {
-        var url = this.appUrl + '/user/update';
+        var url = this.appUrl + '/users/update';
         ajax.post(url, contactInfo, (err, respText) => {
             if (err) {
                 this.reportError('updateContactInfo', err, url);
