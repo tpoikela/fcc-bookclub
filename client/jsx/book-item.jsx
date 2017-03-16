@@ -3,87 +3,43 @@
 
 const React = require('react');
 
+/* BookItem which is used in different pages to render the books.*/
 class BookItem extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.onClickDelete = this.onClickDelete.bind(this);
-        this.onClickAccept = this.onClickAccept.bind(this);
-        this.onClickReject = this.onClickReject.bind(this);
-        this.onClickView = this.onClickView.bind(this);
-        this.selectTradeReq = this.selectTradeReq.bind(this);
-    }
-
-    onClickDelete() {
-        this.props.onClickDelete(this.props.book);
-    }
-
-    onClickAccept() {
-
-    }
-
-    onClickReject() {
-
-    }
-
-    onClickView() {
-
-    }
-
-    selectTradeReq(tradeReq) {
-        this.props.selectTradeReq(tradeReq);
-    }
 
     render() {
         var book = this.props.book;
-        var tradeReqs = book.tradeReqs;
-        var reqElem = null;
-        var modalId = '#' + this.props.modalId;
+        var className = this.props.className || 'book-item';
 
-        reqElem = tradeReqs.map( (item, index) => {
-            var selectTradeReq = this.selectTradeReq.bind(this, item);
-            return (
-                <div key={index}>
-                    Request on {item.createdOn}.<br/>
+        var volInfo = book.volumeInfo;
 
-                    <button
-                        className='btn btn-secondary btn-warning'
-                        data-target={modalId}
-                        data-toggle='modal'
-                        onClick={selectTradeReq}
-                        type='button'
-                        >
-                        View Request
-                    </button>
-
-                    <button>Accept</button>
-                    <button>Reject</button>
-                </div>
-            );
-        });
-
+        var thumbnail = null;
+        if (volInfo.imageLinks) {
+            if (volInfo.imageLinks.smallThumbnail) {
+                thumbnail = <img src={volInfo.imageLinks.smallThumbnail}/>;
+            }
+        }
 
         return (
-            <div className='book-item'>
-                <ul>
-                    <li>
-                        Title: {book.title}
-                        <button onClick={this.onClickDelete}>
-                            Delete book
-                        </button>
-                        {reqElem}
+            <div className={className}>
+                <ul className='book-item-ul'>
+                    <li className='book-item-li'>{thumbnail}</li>
+                    <li className='book-item-li'>
+                        <ul>
+                            <li>Title: {volInfo.title}</li>
+                            <li>Year: {volInfo.publishedData}</li>
+                            <li>Pages: {volInfo.pageCount}</li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         );
+
     }
 }
 
 BookItem.propTypes = {
     book: React.PropTypes.object,
-    modalId: React.PropTypes.string,
-    onClickDelete: React.PropTypes.func,
-    selectTradeReq: React.PropTypes.func
+    className: React.PropTypes.string
 };
 
 module.exports = BookItem;
