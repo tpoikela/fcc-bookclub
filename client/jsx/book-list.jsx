@@ -1,7 +1,7 @@
 'use strict';
 
 const React = require('react');
-const BookItem = require('./book-item');
+const ProfileBookItem = require('./prof-book-item');
 
 class BookList extends React.Component {
 
@@ -13,10 +13,10 @@ class BookList extends React.Component {
         var onClickDelete = this.props.onClickDelete;
         var selectTradeReq = this.props.selectTradeReq;
 
-        bookList = books.map( (item, index) => {
+        bookList = books.map( (book, index) => {
             return (
-                <BookItem
-                    book={item}
+                <ProfileBookItem
+                    book={book}
                     key={index}
                     modalId={modalId}
                     onClickDelete={onClickDelete}
