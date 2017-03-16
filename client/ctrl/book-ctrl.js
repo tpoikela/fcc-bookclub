@@ -12,7 +12,7 @@ class BookCtrl {
     }
 
     addBook(bookData, cb) {
-        var url = this.appUrl + '/book';
+        var url = this.appUrl + '/books';
         ajax.post(url, bookData, (err, respText) => {
             if (err) {cb(err);}
             else {
@@ -23,7 +23,7 @@ class BookCtrl {
     }
 
     deleteBook(bookData, cb) {
-        var url = this.appUrl + '/book';
+        var url = this.appUrl + '/books';
         ajax.delete(url, bookData, (err, respText) => {
             if (err) {cb(err);}
             else {
@@ -47,7 +47,7 @@ class BookCtrl {
 
     /* Gets a list of all books from the server. */
     getAllBooks(cb) {
-        var url = this.appUrl + '/book';
+        var url = this.appUrl + '/books';
         this._ajaxGetBooks(url, cb);
     }
 
