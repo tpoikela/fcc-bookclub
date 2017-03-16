@@ -1,6 +1,7 @@
 'use strict';
 
 const React = require('react');
+const BookItem = require('./book-item');
 
 /* Component to add and search for books to be added to the profile.*/
 class AddBook extends React.Component {
@@ -32,28 +33,12 @@ class AddBook extends React.Component {
     render() {
 
         // Generate the search results here
-        var searchResults = this.props.searchResults.map( (item, index) => {
-            var addCallback = this.onClickAdd.bind(this, item);
-            var volInfo = item.volumeInfo;
-            console.log('volInfo: ' + JSON.stringify(volInfo));
-
-            var thumbnail = null;
-            if (volInfo.imageLinks) {
-                if (volInfo.imageLinks.smallThumbnail) {
-                    thumbnail = <img src={volInfo.imageLinks.smallThumbnail}/>;
-                }
-            }
-            else {
-                console.log('No imageLinks for volInfo');
-
-            }
+        var searchResults = this.props.searchResults.map( (book, index) => {
+            var addCallback = this.onClickAdd.bind(this, book);
 
             return (
-                <div className='book-item' key={index} >
-                    {thumbnail}
-                    Title: {volInfo.title}
-                    Year: {volInfo.publishedData}
-                    Pages: {volInfo.pageCount}
+                <div className='add-book-item' key={index} >
+                    <BookItem book={book} className='book-item' />
                     <button onClick={addCallback}>Add to Profile</button>
                 </div>
 
