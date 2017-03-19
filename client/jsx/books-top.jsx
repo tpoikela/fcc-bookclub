@@ -60,8 +60,15 @@ class BooksTop extends React.Component {
                 var onClick = this.requestBook.bind(this, book);
                 return (
                     <div className='books-book-item' key={index}>
+
                         <BookItem book={book} />
-                        <button onClick={onClick}>Request</button>
+
+                        <button className='books-req-btn'
+                            onClick={onClick}
+                            >
+                            Request
+                        </button>
+
                     </div>
                 );
 
@@ -73,7 +80,9 @@ class BooksTop extends React.Component {
         return (
             <div className='books-top'>
                 {msg}
-                {bookList}
+                <div className='book-list-flex'>
+                    {bookList}
+                </div>
             </div>
 
         );
