@@ -30,9 +30,11 @@ class ProfileBookList extends React.Component {
         }
 
         return (
-            <div className='book-list'>
+            <div className='prof-book-list-div'>
                 <h2>Your books</h2>
-                {bookList}
+                <div className='prof-book-list'>
+                    {bookList}
+                </div>
             </div>
         );
     }
