@@ -20,7 +20,7 @@ class ProfileReqList extends React.Component {
 
         reqElems = reqList.map( (item, index) => {
             var callback = this.handleTradeReq.bind(this, item);
-            return (<li key={index}>
+            return (<li className='prof-req-list-li' key={index}>
                 From: {item.from} <br/>
                 Book: {item.book.title}
                 Status: {item.state}
@@ -29,10 +29,17 @@ class ProfileReqList extends React.Component {
             );
         });
 
+        var requestMsg = <p>You haven't done any trade requests yet.</p>;
+        if (reqList.length > 0) {
+            requestMsg = (
+                <p>You have requested to trade the following books:</p>);
+        }
+
         return (
-            <div className='prof-req-list'>
-                <p>You have requested to trade the following books:</p>
-                <ul>
+            <div className='prof-req-list-div'>
+                <h2>Your requests</h2>
+                {requestMsg}
+                <ul className='prof-req-list-ul'>
                 {reqElems}
                 </ul>
             </div>
