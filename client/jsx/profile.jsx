@@ -15,6 +15,8 @@ const ProfileReqList = require('./prof-req-list');
 const ModalViewReq = require('./modal-view-req');
 const ContactInfo = require('./contact-info');
 
+const TabSelect = require('./tab-select');
+
 /* This component is used at the profile page of a user. It shows all books
  * added by the user, and all requests for trade.*/
 class ProfileTop extends React.Component {
@@ -50,13 +52,16 @@ class ProfileTop extends React.Component {
             input: {},
             reqBooks: [],
             searchResults: [],
-            showProfile: true,
-            showAddBooks: false,
-            showContactInfo: false,
             tradeReqSelected: null,
             userdata: null,
             username: null,
-            userID: null
+            userID: null,
+            waitingSearch: false,
+            tabs: {
+                showProfile: true,
+                showAddBooks: false,
+                showContactInfo: false
+            }
         };
     }
 
@@ -75,29 +80,29 @@ class ProfileTop extends React.Component {
     }
 
     onClickShowProfile() {
-        this.setState({
+        this.setState({tabs: {
             showProfile: true,
             showAddBooks: false,
             showContactInfo: false
-        });
+        }});
     }
 
     /* Called when tabular view switched to search/adding books.*/
     onClickShowAddBooks() {
-        this.setState({
+        this.setState({tabs: {
             showProfile: false,
             showAddBooks: true,
             showContactInfo: false
-        });
+        }});
     }
 
     /* Called when tabular view switched to contact info of the user.*/
     onClickShowContactInfo() {
-        this.setState({
+        this.setState({tabs: {
             showProfile: false,
             showAddBooks: false,
             showContactInfo: true
-        });
+        }});
     }
 
     /* TODO: Updates the user contact information.*/
@@ -200,6 +205,7 @@ class ProfileTop extends React.Component {
     /* Searches for a book to add from the server.*/
     searchBook(search) {
         this.jsonLog('searchBook sending data', search);
+        this.setState({waitingSearch: true});
         this.bookCtrl.searchBook(search, (err, resp) => {
             if (err) {this.error(err);}
             else {
@@ -207,7 +213,8 @@ class ProfileTop extends React.Component {
                 this.log('searchBook with ' + search + ' response OK');
                 this.log('items.length ' + resp.items.length);
                 this.setState({
-                    searchResults: searchResults
+                    searchResults: searchResults,
+                    waitingSearch: false
                 });
             }
         });
@@ -281,17 +288,12 @@ class ProfileTop extends React.Component {
         return (
             <div className='profile-info'>
                 <h2>Username: {username}</h2>
-                <div id='select-panel'>
-                    <button onClick={this.onClickShowProfile}>
-                        Profile
-                    </button>
-                    <button onClick={this.onClickShowAddBooks}>
-                        Add books
-                    </button>
-                    <button onClick={this.onClickShowContactInfo}>
-                        Contact details
-                    </button>
-                </div>
+                <TabSelect
+                    onClickShowAddBooks={this.onClickShowAddBooks}
+                    onClickShowContactInfo={this.onClickShowContactInfo}
+                    onClickShowProfile={this.onClickShowProfile}
+                    tabs={this.state.tabs}
+                />
                 {body}
             </div>
         );
@@ -300,13 +302,13 @@ class ProfileTop extends React.Component {
     /* Returns the rendered component body based on which button is
      * selected.*/
     getCompBody() {
-        if (this.state.showProfile) {
+        if (this.state.tabs.showProfile) {
             return this.renderProfile();
         }
-        else if (this.state.showAddBooks) {
+        else if (this.state.tabs.showAddBooks) {
             return this.renderAddBooks();
         }
-        else if (this.state.showContactInfo) {
+        else if (this.state.tabs.showContactInfo) {
             return this.renderContactInfo();
         }
         else {
@@ -368,6 +370,7 @@ class ProfileTop extends React.Component {
                     onClickAdd={this.addBook}
                     onClickSearch={this.searchBook}
                     searchResults={searchResults}
+                    waitingSearch={this.state.waitingSearch}
                 />
             </div>
         );
