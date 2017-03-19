@@ -1,1 +1,159 @@
 // Styles for the app
+
+@import 'colors';
+
+//------------
+// VARIABLES
+//------------
+
+$color: $neutral1;
+$compl-color: $neutral2;
+
+$active-tab-color: lighten($neutral1, 20%);
+
+$border-color: #000;
+
+$font-size: large;
+
+//---------
+// MIXINS
+//---------
+
+@mixin bg($color) {
+    background-color: $color;
+}
+
+button {
+    color: $compl-color;
+}
+
+body {
+    @include bg($compl-color);
+    color: $color;
+    font-size: $font-size;
+}
+
+input {
+    color: $compl-color;
+}
+
+a {
+    color: $color;
+
+    :visited {
+        color: $color;
+    }
+
+}
+
+.menu {
+    display: inline;
+
+}
+
+.top-menu {
+    padding-left: 0;
+
+    li {
+        display: inline;
+        margin-right: 15px;
+    }
+}
+
+ul {
+
+    .footer-links {
+        display: inline;
+        padding-left: 0;
+    }
+
+    .top-menu {
+
+        a {
+            color: $color;
+
+            :visited {
+                color: $color;
+            }
+
+        }
+    }
+
+}
+
+.wait-search-icon {
+    margin-top: 5px;
+
+}
+
+.tab-sel-active {
+    background-color: $active-tab-color;
+    border-radius: 10px;
+
+}
+
+//-------------------
+// BOOK ITEM STYLING
+//-------------------
+
+.book-item-thumb {
+
+}
+
+.book-item-ul {
+    display: flex;
+    padding-top: 5px;
+}
+
+.book-item-li {
+    display: inline;
+
+    ul {
+        li {
+            list-style-type: none;
+        }
+    }
+}
+
+
+//-----------------
+// BOOKS LIST VIEW
+//-----------------
+
+.books-book-item {
+    border: 1px solid $border-color;
+}
+
+//--------------
+// PROFILE VIEW
+//--------------
+
+.prof-req-list-div {
+
+}
+
+.prof-book-item {
+    display: flex;
+
+    button {
+        align-self: flex-end;
+    }
+}
+
+.prof-req-list-ul {
+
+}
+
+.prof-req-list-li {
+
+}
+
+//--------------
+// FOOTER
+//--------------
+
+.footer-link-icon {
+    display: inline;
+    margin-right: 10px;
+}
+
