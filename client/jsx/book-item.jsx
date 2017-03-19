@@ -15,8 +15,19 @@ class BookItem extends React.Component {
         var thumbnail = null;
         if (volInfo.imageLinks) {
             if (volInfo.imageLinks.smallThumbnail) {
-                thumbnail = <img src={volInfo.imageLinks.smallThumbnail}/>;
+                thumbnail = (
+                    <img className='book-item-thumb'
+                    src={volInfo.imageLinks.smallThumbnail}
+                    />);
             }
+        }
+
+        var authorText = '';
+        if (volInfo.authors.length > 1) {
+            authorText = volInfo.authors[0] + ' et al.';
+        }
+        else if (volInfo.authors.length === 1) {
+            authorText = volInfo.authors[0];
         }
 
         return (
@@ -26,7 +37,8 @@ class BookItem extends React.Component {
                     <li className='book-item-li'>
                         <ul>
                             <li>Title: {volInfo.title}</li>
-                            <li>Year: {volInfo.publishedData}</li>
+                            <li>Authors: {authorText}</li>
+                            <li>Published on: {volInfo.publishedDate}</li>
                             <li>Pages: {volInfo.pageCount}</li>
                         </ul>
                     </li>
