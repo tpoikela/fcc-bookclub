@@ -24,21 +24,28 @@ List of user features:
   8. [ ] A user can reject trade requests.
     - [X] Modify User data when accepted request arrives
     - [ ] Modify Book data when accepted request arrives
-  9. [ ] A user can search books by name.
+  9. [ ] A user can search all added books by name.
   10. [ ] User can see covers of the books in all views
     - [X] Hook up an external API (Google books)
-    - [ ] Show book covers on profile view
-    - [ ] Show book covers on all book view
+    - [X] Show book covers on profile view
+    - [X] Show book covers on all book view
     - [ ] Show book covers on trade request view
   11. [ ] Anonymous users can view all books
-  12. [ ] User can see About page with additional info
+  12. [X] User can see About page with additional info
+  13. [ ] When user clicks "Add to Profile" in Profile->Add Book, there is some
+      feedback to notify the user of successful add.
+  14. [ ] User can see all added books as paginated view, with multiple items
+      per one row.
 
 SCSS TODO-list:
+---------------
 
   1. [ ] Pug-views
     - [ ] index
     - [ ] login
+    - [ ] login failed
     - [ ] signup
+    - [ ] signup success
     - [ ] about
   2. [ ] React-views
     - [ ] Profile
@@ -56,6 +63,6 @@ The following Database schemas have been setup:
     - [X] BookController at client
 
 TradeController on both sides handles acceptance, rejection and addition of new
-trade requests. Trade requests are added to both objects User and Book as
-separate objects.
+trade requests. Trade requests are added to both Schema objects User and Book as
+separate js-objects.
 
