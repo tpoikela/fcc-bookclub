@@ -3,12 +3,10 @@
 // http://github.tallys.io/color-theory
 
 // Color is yellow
-$color: hsl(60, 100%, 50%);
+$first-color: hsl(60, 100%, 50%);
 
 // Complementary color is Blue
-$compl-color: complement($color);
-
-$bg-color: $compl-color;
+$compl-color: complement($first-color);
 
 // Checks if the given color is cool color.
 @function is-cool-color($color) {
@@ -70,9 +68,17 @@ $bg-color: $compl-color;
     }
 }
 
-$mixed1: harmonious-mix($compl-color, $color);
-$mixed2: harmonious-mix($color, $compl-color);
+$mixed1: harmonious-mix($compl-color, $first-color);
+$mixed2: harmonious-mix($first-color, $compl-color);
 
-$neutral1: mix-neutral($color);
-$neutral2: mix-neutral($compl-color);
+$neutral1: mix-neutral($mixed1);
+$neutral2: mix-neutral($mixed2);
+
+// Light/dark version of neutral1
+$n1-light: lighten($neutral1, 20%);
+$n1-dark: darken($neutral1, 20%);
+
+// Light/dark version of neutral2 (secondary color)
+$n2-light: lighten($neutral2, 20%);
+$n2-dark: darken($neutral2, 20%);
 
