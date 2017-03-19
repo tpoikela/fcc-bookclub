@@ -58,9 +58,8 @@ class BooksTop extends React.Component {
         if (this.state.books.length > 0) {
             bookList = this.state.books.map( (book, index) => {
                 var onClick = this.requestBook.bind(this, book);
-                var style = {color: 'red', border: '1px solid black'};
                 return (
-                    <div key={index} style={style}>
+                    <div className='books-book-item' key={index}>
                         <BookItem book={book} />
                         <button onClick={onClick}>Request</button>
                     </div>
