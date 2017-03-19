@@ -9,11 +9,16 @@
 $color: $neutral1;
 $compl-color: $neutral2;
 
+$font-color: #000;
+
 $active-tab-color: lighten($neutral1, 20%);
 
 $border-color: #000;
 
-$font-size: large;
+$font-step: 4px;
+$font-size-large: 20px;
+$font-size-medium: $font-size-large - $font-step;
+$font-size-small: $font-size-medium - $font-step;
 
 //---------
 // MIXINS
@@ -29,8 +34,8 @@ button {
 
 body {
     @include bg($compl-color);
-    color: $color;
-    font-size: $font-size;
+    color: $font-color;
+    font-size: $font-size-large;
 }
 
 input {
@@ -120,9 +125,30 @@ ul {
 // BOOKS LIST VIEW
 //-----------------
 
+.book-list-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 .books-book-item {
     border: 1px solid $border-color;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 3px;
+
+    .book-item-li {
+        font-size: $font-size-small;
+    }
+
 }
+
+.books-req-btn {
+    align-self: flex-start;
+}
+
 
 //--------------
 // PROFILE VIEW
@@ -132,11 +158,19 @@ ul {
 
 }
 
-.prof-book-item {
+.prof-book-list {
     display: flex;
 
+}
+
+.prof-book-item {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+
     button {
-        align-self: flex-end;
+        align-self: flex-start;
     }
 }
 
