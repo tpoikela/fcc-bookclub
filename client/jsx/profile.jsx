@@ -8,7 +8,7 @@ const UserCtrl = require('../ctrl/user-ctrl');
 const BookCtrl = require('../ctrl/book-ctrl');
 const TradeCtrl = require('../ctrl/trade-ctrl');
 
-const BookList = require('./book-list');
+const ProfileBookList = require('./prof-book-list');
 const AddBook = require('./add-book');
 const ProfileReqList = require('./prof-req-list');
 
@@ -326,7 +326,7 @@ class ProfileTop extends React.Component {
 
         if (this.state.userdata) {
             bookList = (
-                <BookList
+                <ProfileBookList
                     books={this.state.userdata.bookList}
                     modalId={this.modalId}
                     onClickDelete={this.deleteBook}
