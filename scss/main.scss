@@ -93,8 +93,10 @@ ul {
 
 .tab-sel-active {
     background-color: $active-tab-color;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
+}
 
+.tab-sel-inactive {
 }
 
 //-------------------
@@ -160,6 +162,7 @@ ul {
 
 .prof-book-list {
     display: flex;
+    flex-wrap: wrap;
 
 }
 
@@ -167,6 +170,7 @@ ul {
     display: flex;
     flex: 1;
     flex-direction: column;
+    font-size: $font-size-small;
     justify-content: flex-end;
 
     button {
