@@ -81,15 +81,16 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" flags=S {
    add-book.jsx
    app.jsx
    book-item.jsx
-   book-list.jsx
    books-top.jsx
    contact-info.jsx
    contact-input.jsx
    modal-header.jsx
    modal-view-req.jsx
    prof-book-item.jsx
+   prof-book-list.jsx
    prof-req-list.jsx
    profile.jsx
+   tab-select.jsx
    top.jsx
   }
   common=common {
