@@ -1,0 +1,78 @@
+
+// Most of the functions taken from
+// http://github.tallys.io/color-theory
+
+// Color is yellow
+$color: hsl(60, 100%, 50%);
+
+// Complementary color is Blue
+$compl-color: complement($color);
+
+$bg-color: $compl-color;
+
+// Checks if the given color is cool color.
+@function is-cool-color($color) {
+    @return hue($color) < 300 and hue($color) > 120;
+}
+
+// Checks if the color is high or low value.
+@function is-high-key-value($color) {
+    @return hue($color) > 30 and hue($color) < 140;
+}
+
+// Establish a relationship (similar lighting conditions) between colors.
+@function harmonious-mix($mix, $base) {
+    @if (is-cool-color($mix)) {
+        @if is-high-key-value($base) {
+            @return mix($mix, $base, 11%);
+        }
+        @else {
+            @return mix($mix, $base, 16%);
+        }
+    }
+    @else {
+        @if is-high-key-value($base) {
+            @return mix($mix, $base, 13%);
+        }
+        @else {
+            @return mix($mix, $base, 23%);
+        }
+    }
+}
+
+@function mix-neutral($color) {
+    @if (is-highest-key-value($color)) {
+        @if is-high-key-value(complement($color)) {
+            @return mix(complement($color), $color, 19%);
+        }
+        @else {
+            @return mix(complement($color), $color, 13%);
+        }
+    }
+    @else if (is-high-key-value($color)) {
+        @if is-high-key-value(complement($color)) {
+            @return mix(complement($color), $color, 31%);
+        }
+        @else {
+            @return mix(complement($color), $color, 23%);
+        }
+    }
+    @else {
+        @if is-highest-key-value(complement($color)) {
+            @return mix(complement($color), $color, 31%);
+        }
+        @if is-high-key-value(complement($color)) {
+            @return mix(complement($color), $color, 26%);
+        }
+        @else {
+            @return mix(complement($color), $color, 23%);
+        }
+    }
+}
+
+$mixed1: harmonious-mix($compl-color, $color);
+$mixed2: harmonious-mix($color, $compl-color);
+
+$neutral1: mix-neutral($color);
+$neutral2: mix-neutral($compl-color);
+
