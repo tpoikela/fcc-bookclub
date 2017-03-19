@@ -1,15 +1,13 @@
 'use strict';
 
 const React = require('react');
+const BookItem = require('./book-item');
 
 class ProfileBookItem extends React.Component {
 
     constructor(props) {
         super(props);
         this.onClickDelete = this.onClickDelete.bind(this);
-        this.onClickAccept = this.onClickAccept.bind(this);
-        this.onClickReject = this.onClickReject.bind(this);
-        this.onClickView = this.onClickView.bind(this);
         this.selectTradeReq = this.selectTradeReq.bind(this);
     }
 
@@ -48,16 +46,12 @@ class ProfileBookItem extends React.Component {
 
 
         return (
-            <div className='book-item'>
-                <ul>
-                    <li>
-                        Title: {book.title}
-                        <button onClick={this.onClickDelete}>
-                            Delete book
-                        </button>
-                        {reqElem}
-                    </li>
-                </ul>
+            <div className='prof-book-item'>
+                <BookItem book={book} />
+                <button onClick={this.onClickDelete}>
+                    Delete book
+                </button>
+                {reqElem}
             </div>
         );
     }
