@@ -36,6 +36,8 @@ List of user features:
       feedback to notify the user of successful add.
   14. [ ] User can see all added books as paginated view, with multiple items
       per one row.
+  15. [ ] When user Updates Contact details, add feedback whether operation
+      succeeded or failed.
 
 SCSS TODO-list:
 ---------------
