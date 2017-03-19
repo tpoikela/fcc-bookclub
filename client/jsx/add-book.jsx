@@ -45,6 +45,20 @@ class AddBook extends React.Component {
             );
         });
 
+        var buttonOrSpinner = null;
+        if (this.props.waitingSearch) {
+            buttonOrSpinner = (<div className='wait-search-icon'>
+                <i className='fa fa-spin fa-spinner fa-2x '/>
+            </div>);
+        }
+        else {
+            buttonOrSpinner = (
+                <button id='add-button' onClick={this.onClickSearch}>
+                    <i className='search-icon fa fa-search fa-2x'/>
+                </button>
+            );
+        }
+
         return (
             <div className='add-book'>
 				<input className='fa fa-2x search-input'
@@ -53,9 +67,7 @@ class AddBook extends React.Component {
                     placeholder='What books have you?'
                     value={this.state.bookName}
 				/>
-                <button id='add-button' onClick={this.onClickSearch}>
-                    <i className='search-icon fa fa-search fa-2x'/>
-                </button>
+                {buttonOrSpinner}
                 {searchResults}
             </div>
 
@@ -67,7 +79,8 @@ class AddBook extends React.Component {
 AddBook.propTypes = {
 	onClickAdd: React.PropTypes.func,
     onClickSearch: React.PropTypes.func,
-    searchResults: React.PropTypes.array
+    searchResults: React.PropTypes.array,
+    waitingSearch: React.PropTypes.bool
 };
 
 module.exports = AddBook;
