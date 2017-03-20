@@ -22,8 +22,8 @@ class AddBook extends React.Component {
 		this.setState({bookName: bookName});
     }
 
-	onClickAdd(book) {
-		this.props.onClickAdd(book);
+	onClickAdd(book, index) {
+		this.props.onClickAdd(book, index);
 	}
 
 	onClickSearch() {
@@ -34,17 +34,28 @@ class AddBook extends React.Component {
 
         // Generate the search results here
         var searchResults = this.props.searchResults.map( (book, index) => {
-            var addCallback = this.onClickAdd.bind(this, book);
+            var addCallback = this.onClickAdd.bind(this, book, index);
+
+            var btnOrMsg = null;
+            if (book.added) {
+                btnOrMsg = <p className='text-success'>Added to profile.</p>;
+            }
+            else {
+                btnOrMsg = (
+                    <button onClick={addCallback}>Add to Profile</button>
+                );
+            }
 
             return (
                 <div className='add-book-item' key={index} >
                     <BookItem book={book} className='book-item' />
-                    <button onClick={addCallback}>Add to Profile</button>
+                    {btnOrMsg}
                 </div>
 
             );
         });
 
+        // Render either search button or spinner (if search in progress)
         var buttonOrSpinner = null;
         if (this.props.waitingSearch) {
             buttonOrSpinner = (<div className='wait-search-icon'>
