@@ -22,7 +22,7 @@ class ProfileReqList extends React.Component {
             var callback = this.handleTradeReq.bind(this, item);
             return (<li className='prof-req-list-li' key={index}>
                 From: {item.from} <br/>
-                Book: {item.book.title}
+                Book: {item.book.title} <br/>
                 Status: {item.state}
                 <button onClick={callback}>Delete request</button>
             </li>
