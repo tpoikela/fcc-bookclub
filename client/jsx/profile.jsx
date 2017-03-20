@@ -63,6 +63,8 @@ class ProfileTop extends React.Component {
                 showContactInfo: false
             }
         };
+
+        this.loggingOn = false;
     }
 
     error(err) {
@@ -70,13 +72,19 @@ class ProfileTop extends React.Component {
         this.setState({error: err});
     }
 
+    /* Simple logging function.*/
     log(msg) {
-        console.log('ProfileTop [LOG]: ' + msg);
+        if (this.loggingOn) {
+            console.log('ProfileTop [LOG]: ' + msg);
+        }
     }
 
+    /* Logging with an object.*/
     jsonLog(msg, obj) {
-        var fullMsg = (msg + ': ' + JSON.stringify(obj));
-        this.log(fullMsg);
+        if (this.loggingOn) {
+            var fullMsg = (msg + ': ' + JSON.stringify(obj));
+            this.log(fullMsg);
+        }
     }
 
     onClickShowProfile() {
@@ -177,14 +185,15 @@ class ProfileTop extends React.Component {
     }
 
 	/* Adds one book for the user. */
-    addBook(book) {
-        console.log('Book ' + book.volumeInfo.title + ' will be added.');
+    addBook(book, index) {
+        this.log('Book ' + book.volumeInfo.title + ' will be added.');
         var bookData = {username: this.state.username,
             book: book};
         this.bookCtrl.addBook(bookData, (err, resp) => {
                 if (err) {this.error(err);}
                 else {
                     this.jsonLog('addBook response data', resp);
+                    this.state.searchResults[index].added = true;
                     this.getUserInfo();
                 }
         });
@@ -239,7 +248,7 @@ class ProfileTop extends React.Component {
             this.tradeCtrl.acceptTradeReq(tradeReq, (err, resp) => {
                 if (err) {this.error(err);}
                 else {
-                    this.jsonLog('rejectTradeReq() resp: ', resp);
+                    this.jsonLog('acceptTradeReq() resp: ', resp);
                     this.getUserInfo();
                 }
             });
@@ -266,13 +275,12 @@ class ProfileTop extends React.Component {
         this.bookCtrl.getBooksForUser(tradeReq.from, (err, data) => {
             if (err) {this.error(err);}
             else {
-                console.log('selectTradeReq(): user books '
-                    + JSON.stringify(data));
+                this.jsonLog('selectTradeReq(): user books ', data);
                 this.setState({
                     reqBooks: data.books,
                     tradeReqSelected: tradeReq
                 });
-                console.log('selectTradeReq(): tradeReqSelected not null');
+                this.log('selectTradeReq(): tradeReqSelected not null');
             }
         });
     }
@@ -322,7 +330,7 @@ class ProfileTop extends React.Component {
         var bookList = null;
         var reqList = null;
 
-        console.log('<ProfileTop> renderProfile()');
+        this.log('<ProfileTop> renderProfile()');
 
         if (this.state.userdata) {
             bookList = (
@@ -350,6 +358,7 @@ class ProfileTop extends React.Component {
 
                 <ModalViewReq
                     acceptReq={this.acceptTradeReq}
+                    bookForReq={this.state.bookForReq}
                     id={this.modalId}
                     rejectReq={this.rejectTradeReq}
                     reqBooks={this.state.reqBooks}
@@ -364,7 +373,7 @@ class ProfileTop extends React.Component {
     renderAddBooks() {
         var searchResults = this.state.searchResults;
         return (
-            <div id='search-view'>
+            <div className='search-view'>
                 <p>Search for books to add to your profile.</p>
                 <AddBook
                     onClickAdd={this.addBook}
