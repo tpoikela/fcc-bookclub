@@ -45,7 +45,7 @@ module.exports = function(app, passport) {
     };
 
     /* loggedIn func from clementine.js. */
-	var isLoggedIn = function(req, res, next) {
+	var isLoggedInOrRedirect = function(req, res, next) {
 		if (req.isAuthenticated()) {
 			return next();
 		}
@@ -54,6 +54,17 @@ module.exports = function(app, passport) {
 			return res.redirect('/login');
 		}
 	};
+
+    var isLoggedInAjax = function(req, res, next) {
+		if (req.isAuthenticated()) {
+			return next();
+		}
+        else {
+            debug('Non-authorized ajax call received');
+            return res.status(403).json(notAuthorized);
+        }
+    };
+
 
     /* Returns the username from the request. Logs an error if username is not
      * present. */
@@ -141,7 +152,7 @@ module.exports = function(app, passport) {
 		});
 
 	app.route('/profile')
-		.get(isLoggedIn, (req, res) => {
+		.get(isLoggedInOrRedirect, (req, res) => {
             renderPug(req, res, 'profile.pug');
 		});
 
@@ -181,7 +192,7 @@ module.exports = function(app, passport) {
 
 
     app.route('/users/:name')
-        .get(isLoggedIn, (req, res) => {
+        .get(isLoggedInAjax, (req, res) => {
             var username = req.params.name;
             if (username === req.user.username) {
                 userController.getUserByName(username, (err, data) => {
@@ -204,7 +215,7 @@ module.exports = function(app, passport) {
         });
 
     app.route('/users/update')
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = getUserName(req, '/user/update');
             var userInfo = req.body;
             debugJSON('/users/update ' + _u(username) + ' info: ', userInfo);
@@ -222,11 +233,10 @@ module.exports = function(app, passport) {
     //--------------------------------------
     // Routes for the book data
     //--------------------------------------
-    app.route('/books')
 
-        .get(isLoggedIn, (req, res) => {
-            var username = req.user.username;
-            bookController.getBooks(username, (err, data) => {
+    app.route('/books')
+        .get((req, res) => {
+            bookController.getBooks((err, data) => {
                 if (err) {
                     logError('GET /books/', err, req);
                     res.status(500).json(errorInternal);
@@ -237,7 +247,7 @@ module.exports = function(app, passport) {
             });
         })
 
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = req.body.username;
             var book = req.body.book;
             _log('Server got POST-req to /books. User: ' + _u(username));
@@ -262,7 +272,7 @@ module.exports = function(app, passport) {
 
         })
 
-        .delete(isLoggedIn, (req, res) => {
+        .delete(isLoggedInAjax, (req, res) => {
             if (req.body) {
                 var bookData = req.body;
                 var updateObj = {
@@ -289,7 +299,7 @@ module.exports = function(app, passport) {
 
     /* Route for handling book searches via external API.*/
     app.route('/books/search')
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = req.user.username;
             var search = req.body.search;
             debugJSON('/POST /books/search ', req.body);
@@ -299,7 +309,6 @@ module.exports = function(app, passport) {
                         if (err) {
                             logError('POST /books/search with ' + username);
                             res.status(500).json(errorInternal);
-
                         }
                         else {
                             res.status(200).json(data);
@@ -314,7 +323,7 @@ module.exports = function(app, passport) {
 
     /* Returns all books owned by the given user. */
     app.route('/books/:username')
-        .get(isLoggedIn, (req, res) => {
+        .get(isLoggedInAjax, (req, res) => {
             var username = req.params.username;
             debug('/books/:username with ' + username);
             bookController.getBooksForUser(username, (err, books) => {
@@ -335,7 +344,7 @@ module.exports = function(app, passport) {
 
     /* Accepts tradeReq. */
     app.route('/tradereq/accept')
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = getUserName(req, '/tradereq/accept');
             tradeController.acceptTradeReq(username, req.body, err => {
                 if (err) {
@@ -353,7 +362,7 @@ module.exports = function(app, passport) {
 
     /* Rejects tradeReq. */
     app.route('/tradereq/reject')
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = getUserName(req, 'tradereq/reject');
             tradeController.rejectTradeReq(username, req.body, err => {
                 if (err) {
@@ -370,7 +379,7 @@ module.exports = function(app, passport) {
     /* Add/delete tradeReqs. */
     app.route('/tradereq')
 
-        .post(isLoggedIn, (req, res) => {
+        .post(isLoggedInAjax, (req, res) => {
             var username = getUserName(req, '/tradereq');
             tradeController.addTradeReq(username, req.body, err => {
                 if (err) {
@@ -383,7 +392,7 @@ module.exports = function(app, passport) {
             });
         })
 
-        .delete(isLoggedIn, (req, res) => {
+        .delete(isLoggedInAjax, (req, res) => {
             var username = getUserName(req, '/tradereq');
             debug('delete /tradereq, for user ' + _u(username));
             tradeController.removeTradeReq(username, req.body, err => {
