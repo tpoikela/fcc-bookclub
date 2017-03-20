@@ -2,6 +2,8 @@
 // Most of the functions taken from
 // http://github.tallys.io/color-theory
 
+$red: #f00;
+
 // Color is yellow
 $first-color: hsl(60, 100%, 50%);
 
@@ -81,4 +83,6 @@ $n1-dark: darken($neutral1, 20%);
 // Light/dark version of neutral2 (secondary color)
 $n2-light: lighten($neutral2, 20%);
 $n2-dark: darken($neutral2, 20%);
+
+$danger-color: mix($first-color, $red);
 
