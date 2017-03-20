@@ -9,7 +9,7 @@ const User = require('../model/user-schema');
 class BookController {
 
     /* Returns all books in the database.*/
-    getBooks(username, cb) {
+    getBooks(cb) {
         Book.find({}, (err, data) => {
             if (err) {cb(err);}
             else {
