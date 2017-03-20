@@ -26,8 +26,6 @@ class UserController {
             }
             else {
                 var data = JSON.parse(respText);
-                console.log('userCtrl amIAuthenticated() respText: '
-                    + respText);
                 cb(null, data);
             }
         });
