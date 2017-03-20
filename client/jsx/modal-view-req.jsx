@@ -3,6 +3,8 @@
 
 const React = require('react');
 const ModalHeader = require('./modal-header');
+const BookItem = require('./book-item');
+
 
 /* This modal view is shown when the user checks a certain request. */
 class ModalViewReq extends React.Component {
@@ -33,13 +35,14 @@ class ModalViewReq extends React.Component {
         var titleText = 'View trade request';
         var reqBooks = this.props.reqBooks;
         var tradeReq = this.props.tradeReq;
+        var bookForReq = this.props.bookForReq;
 
         var bookList = reqBooks.map( (item, index) => {
             var selectBook = this.selectBookForReq.bind(this, item);
             console.log('Item is ' + JSON.stringify(item));
             return (
                 <div key={index}>
-                    <strong>Title: {item.title}</strong>
+                    <BookItem book={item} />
                     <button onClick={selectBook}>Select</button>
                 </div>
             );
@@ -47,9 +50,32 @@ class ModalViewReq extends React.Component {
 
         // When modal not shown, tradeReq not defined for the 1st time
         var reqFrom = '';
+        var acceptedStatus = null;
         if (tradeReq !== null) {
             reqFrom = tradeReq.from;
+
+            if (tradeReq.acceptedWith) {
+                acceptedStatus = (
+                    <p className='text-success'>
+                        You've accepted this request.
+                    </p>
+                );
+            }
+            else if (tradeReq.state === 'Rejected') {
+                acceptedStatus = (
+                    <p className='text-danger'>
+                        You've rejected this request.
+                    </p>
+                );
+            }
         }
+
+        var selectedBook = null;
+        if (bookForReq) {
+            var selTitle = bookForReq.title;
+            selectedBook = <p>Selected: {selTitle}</p>;
+        }
+
 
         return (
             <div
@@ -70,13 +96,18 @@ class ModalViewReq extends React.Component {
                         />
 
                         <div className='modal-body row'>
-                            <p>You've received a trade request. You can choose
+                            <p>You've received a request from {reqFrom}.</p>
+                            <p>
+                                You can choose
                                 one of the following books and click Accept,
                                 or you can reject the trade by clicking Reject.
                             </p>
-                            <p>Request from: {reqFrom}</p>
+                            <hr/>
                             <p>You can pick one of the following books:</p>
                             {bookList}
+                            {selectedBook}
+                            <hr/>
+                            {acceptedStatus}
                         </div>
 
                         <div className='modal-footer row'>
@@ -117,6 +148,7 @@ class ModalViewReq extends React.Component {
 }
 
 ModalViewReq.propTypes = {
+    bookForReq: React.PropTypes.object,
     id: React.PropTypes.string,
     tradeReq: React.PropTypes.object,
     acceptReq: React.PropTypes.func,
