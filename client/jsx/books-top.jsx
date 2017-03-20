@@ -9,6 +9,8 @@ const BookItem = require('./book-item');
 
 const appUrl = window.location.origin;
 
+/* Top-level component for /allbooks view. This is a list of all books added by
+ * all users. */
 class BooksTop extends React.Component {
 
     constructor(props) {
@@ -23,6 +25,15 @@ class BooksTop extends React.Component {
             msg: '',
             booksPerPage: 20
         };
+
+        this.debugEnabled = false;
+    }
+
+    /* For printing debug information. */
+    debug(msg) {
+        if (this.debugEnabled) {
+            console.log('BooksTop [DEBUG] ' + msg);
+        }
     }
 
     componentDidMount() {
@@ -39,21 +50,37 @@ class BooksTop extends React.Component {
         });
     }
 
-    /* Requests the given book with a trade request.*/
+    /* Requests the given book with a trade request. Works only for
+     * authenticated users. */
     requestBook(book) {
-        console.log('Book with title ' + book.title + ' requested');
+        this.debug('Book with title ' + book.title + ' requested');
         this.tradeCtrl.makeTradeReq(book, (err, data) => {
             if (err) {
                 this.setState({msg: err});
             }
             else {
-                console.log('requestBook OK response: ' + JSON.stringify(data));
+                this.debug('requestBook OK response: ' + JSON.stringify(data));
                 this.setState({msg: 'Your trade request was submitted.'});
             }
         });
     }
 
     render() {
+        var bookList = this.getBookListRendered();
+        var msg = (<p>{this.state.msg}</p>);
+
+        return (
+            <div className='books-top'>
+                {msg}
+                <div className='book-list-flex'>
+                    {bookList}
+                </div>
+            </div>
+
+        );
+    }
+
+    getBookListRendered() {
         var bookList = null;
         if (this.state.books.length > 0) {
             bookList = this.state.books.map( (book, index) => {
@@ -74,18 +101,8 @@ class BooksTop extends React.Component {
 
             });
         }
+        return bookList;
 
-        var msg = (<p>{this.state.msg}</p>);
-
-        return (
-            <div className='books-top'>
-                {msg}
-                <div className='book-list-flex'>
-                    {bookList}
-                </div>
-            </div>
-
-        );
     }
 
 }
