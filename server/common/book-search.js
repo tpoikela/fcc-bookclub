@@ -10,6 +10,7 @@ const request = require('request');
 
 class BookSearch {
 
+    /* Throws error unless API key is given.*/
     constructor(obj) {
         if (typeof obj === 'object') {
             this.apiKey = obj.apiKey;
@@ -19,10 +20,11 @@ class BookSearch {
             }
         }
         else {
-            throw new Error('Constr takes only object');
+            throw new Error('Constr takes object as first arg');
         }
     }
 
+    /* Searches for the book using obj.word using external Google Books API.*/
     search(obj, cb) {
         var query = '?q=' + obj.word;
         var key = 'key=' + this.apiKey;
@@ -34,15 +36,34 @@ class BookSearch {
             else {
                 debug('Book search error: ' + error);
             }
-            if (body) {
+
+            if (error) {
+                cb(error);
+            }
+            else if (body) {
                 try {
                     var bodyParsed = JSON.parse(body);
+                    this.removeBookFields(bodyParsed, ['description']);
                     cb(null, bodyParsed);
                 }
                 catch (e) {
                     cb(e);
                 }
             }
+            else {
+                var err = new Error('BookSearch No resp body detected.');
+                cb(err);
+            }
+        });
+    }
+
+    /* Removes the description field from a book.*/
+    removeBookFields(body, fields) {
+        var books = body.items;
+        books.forEach( book => {
+            fields.forEach( field => {
+                delete book[field];
+            });
         });
     }
 
