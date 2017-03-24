@@ -6,12 +6,27 @@
 // VARIABLES
 //------------
 
-$prim-color: $neutral1;
+// Actual primary/complementary colors
 $compl-color: $neutral2;
 
-$font-color: #000;
+$black-shade: #111;
+$white-shade: #eee;
 
-$active-tab-color: lighten($neutral1, 20%);
+$prim-color: $white-shade;
+
+// Semantic colors
+$font-color: $white-shade;
+$bg-color: $black-shade;
+
+$success-color: #1e1;
+
+// Defines how transparent text boxes look like
+$text-bg-opacity: 0.6;
+$top-menu-color: rgba(100, 100, 100, $text-bg-opacity);
+
+$top-menu-color: rgba(40, 40, 40, 0.7);
+
+$active-tab-color: lighten($black-shade, 20%);
 
 $border-color: #000;
 
@@ -24,27 +39,64 @@ $font-size-small: $font-size-medium - $font-step;
 // MIXINS
 //---------
 
+@mixin text-box-bx {
+    background-color: $top-menu-color;
+}
+
 @mixin bg($color) {
     background-color: $color;
 }
 
-button {
-    color: $compl-color;
+@mixin btn-colors {
+    background-color: $black-shade;
+    color: $white-shade;
+
 }
 
+@mixin book-item-borders {
+    border: 1px solid $border-color;
+    border-radius: 10px;
+}
+
+@mixin book-item-margins {
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding: 5px;
+}
+
+//-----------
+// ELEMENTS
+//-----------
+
+html {
+    font-size: 62.5%;
+}
+
+
 h1 {
-    color: $font-color;
+    color: $prim-color;
+    font-size: 5rem;
+    margin-left: 50px;
 }
 
 body {
-    @include bg($compl-color);
+    @include bg($bg-color);
     color: $font-color;
-    font-size: $font-size-large;
+    font-size: $font-size-medium;
 }
 
 input {
     color: $compl-color;
 }
+
+button {
+    color: $compl-color;
+
+    :hover {
+        background-color: lighten($black-shade, 30%);
+    }
+}
+
 
 a {
     color: $prim-color;
@@ -52,7 +104,14 @@ a {
     :visited {
         color: $prim-color;
     }
+}
 
+.bg-well {
+    @include text-box-bx;
+}
+
+.main {
+    @include text-box-bx;
 }
 
 .menu {
@@ -60,7 +119,8 @@ a {
 }
 
 .top-menu {
-    padding-left: 0;
+    @include text-box-bx;
+    padding: 6px 4px;
 
     li {
         display: inline;
@@ -91,16 +151,17 @@ ul {
 
 .wait-search-icon {
     margin-top: 5px;
-
 }
 
 .tab-sel-active {
     background-color: $active-tab-color;
     border-radius: 10px 10px 0 0;
+    color: $white-shade;
 }
 
 .tab-sel-inactive {
     border-radius: 10px 10px 0 0;
+    color: $black-shade;
 
     :hover {
         background-color: $n1-light;
@@ -110,12 +171,11 @@ ul {
 }
 
 .text-success {
-    color: $prim-color;
+    color: $success-color;
 }
 
 .text-danger {
     color: $danger-color;
-
 }
 
 //-------------------
@@ -153,12 +213,15 @@ ul {
 }
 
 .books-book-item {
-    border: 1px solid $border-color;
+    @include text-box-bx;
+    @include book-item-borders;
+    @include book-item-margins;
+
     display: flex;
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 3px;
+
 
     .book-item-li {
         font-size: $font-size-small;
@@ -166,8 +229,20 @@ ul {
 
 }
 
-.books-req-btn {
+
+.books-tab {
+}
+
+.books-btn {
+    @include btn-colors;
+
     align-self: flex-start;
+    border: 1px solid $white-shade;
+    border-radius: 3px;
+
+    :hover {
+        background-color: lighten($black-shade, 10%);
+    }
 }
 
 
@@ -179,6 +254,10 @@ ul {
 
 }
 
+.prof-req-list-top {
+    @include text-box-bx;
+}
+
 .prof-book-list {
     display: flex;
     flex-wrap: wrap;
@@ -186,9 +265,14 @@ ul {
 }
 
 .prof-book-item {
+    @include text-box-bx;
+    @include book-item-borders;
+    @include book-item-margins;
+
     display: flex;
     flex: 1;
     flex-direction: column;
+
     font-size: $font-size-small;
     justify-content: flex-end;
 
@@ -202,10 +286,17 @@ ul {
 }
 
 .prof-req-list-li {
+    @include text-box-bx;
+    @include book-item-borders;
+    @include book-item-margins;
+}
 
+.modal {
+    color: $black-shade;
 }
 
 .modal-body {
+    color: $black-shade;
     margin: 10px 0;
 }
 
@@ -213,9 +304,24 @@ ul {
     margin-top: 10px;
 }
 
+.books-form-group {
+    margin-left: 20px;
+
+}
+
+.books-contact-input {
+    margin-left: 10px;
+    max-width: 300px;
+}
+
+
 //--------------
 // FOOTER
 //--------------
+
+.author-p {
+    @include text-box-bx;
+}
 
 .footer-link-icon {
     display: inline;

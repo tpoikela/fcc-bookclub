@@ -4,10 +4,7 @@
 
 $red: #f00;
 
-// Color is yellow
-$first-color: hsl(60, 100%, 50%);
-
-// Complementary color is Blue
+$first-color: hsl(70, 100%, 50%);
 $compl-color: complement($first-color);
 
 // Checks if the given color is cool color.
