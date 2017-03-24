@@ -24,7 +24,14 @@ class ProfileReqList extends React.Component {
                 From: {item.from} <br/>
                 Book: {item.book.title} <br/>
                 Status: {item.state}
-                <button onClick={callback}>Delete request</button>
+
+                <button
+                    className='books-btn'
+                    onClick={callback}
+                    >
+                    Delete request
+                </button>
+
             </li>
             );
         });
@@ -37,8 +44,10 @@ class ProfileReqList extends React.Component {
 
         return (
             <div className='prof-req-list-div'>
-                <h2>Your requests</h2>
-                {requestMsg}
+                <div className='prof-req-list-top'>
+                    <h2>Your requests</h2>
+                    {requestMsg}
+                </div>
                 <ul className='prof-req-list-ul'>
                 {reqElems}
                 </ul>
