@@ -2,6 +2,7 @@
 
 const React = require('react');
 const BookItem = require('./book-item');
+const Button = require('./button');
 
 /* Component to add and search for books to be added to the profile.*/
 class AddBook extends React.Component {
@@ -42,7 +43,9 @@ class AddBook extends React.Component {
             }
             else {
                 btnOrMsg = (
-                    <button onClick={addCallback}>Add to Profile</button>
+                    <Button onClick={addCallback}
+                        title={'Add to Profile'}
+                    />
                 );
             }
 
@@ -64,7 +67,11 @@ class AddBook extends React.Component {
         }
         else {
             buttonOrSpinner = (
-                <button id='add-button' onClick={this.onClickSearch}>
+                <button
+                    className='books-btn'
+                    id='add-button'
+                    onClick={this.onClickSearch}
+                    >
                     <i className='search-icon fa fa-search fa-2x'/>
                 </button>
             );
