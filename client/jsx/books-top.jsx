@@ -90,7 +90,7 @@ class BooksTop extends React.Component {
 
                         <BookItem book={book} />
 
-                        <button className='books-req-btn'
+                        <button className='books-btn'
                             onClick={onClick}
                             >
                             Request
