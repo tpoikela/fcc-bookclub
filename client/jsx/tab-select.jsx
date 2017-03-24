@@ -2,8 +2,8 @@
 
 var React = require('react');
 
-const activeClass = 'tab-sel-active';
-const inActiveClass = 'tab-sel-inactive';
+const activeClass = 'books-tab tab-sel-active';
+const inActiveClass = 'books-tab tab-sel-inactive';
 
 class TabSelect extends React.Component {
 
