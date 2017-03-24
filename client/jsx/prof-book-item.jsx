@@ -47,8 +47,14 @@ class ProfileBookItem extends React.Component {
 
         return (
             <div className='prof-book-item'>
-                <BookItem book={book} />
-                <button onClick={this.onClickDelete}>
+                <BookItem book={book}
+                    hideInfo={true}
+
+                />
+                <button
+                    className='books-btn'
+                    onClick={this.onClickDelete}
+                    >
                     Delete book
                 </button>
                 {reqElem}
