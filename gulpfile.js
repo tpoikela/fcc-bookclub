@@ -10,8 +10,6 @@ var nodemon = require('gulp-nodemon');
 
 var ctags = require('gulp-ctags');
 
-var spawn = require('child_process').spawn;
-
 var jsxDir = './client/jsx';
 
 var port = process.env.PORT || 8080;
@@ -115,7 +113,6 @@ gulp.task('watch-cli', watchDependents, function() {
 gulp.task('watch', ['watch-cli', 'serve'], function() {
     gulp.watch(paths.server, ['serve']);
 });
-
 
 gulp.task('default', ['watch']);
 

@@ -1,0 +1,6 @@
+{
+  "name": "BookWyrms",
+  "description": "Book trading club app",
+  "repository": "https://github.com/tpoikela/fcc-bookclub",
+  "keywords": ["mongo", "express", "react", "node", "books"]
+}
