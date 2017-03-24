@@ -36,7 +36,7 @@ class ContactInfo extends React.Component {
         return (
             <div className='form'>
               {inputs}
-              <button className='btn btn-default'
+              <button className='books-btn'
                   onClick={this.onClickUpdate}
                   >Update
               </button>
