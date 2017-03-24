@@ -25,10 +25,11 @@ class ContactInput extends React.Component {
         var storedValue = this.props.storedValue;
 
         return (
-            <div className='form-group'>
+            <div className='books-form-group form-group'>
                 <span>Stored value: {storedValue}<br/></span>
                 <label htmlFor={id}>{label}</label>
-                <input className='form-control' id={id}
+                <input className='books-contact-input form-control'
+                    id={id}
                     onChange={this.onChange}
                     placeholder={placeholder}
                     type={type}
