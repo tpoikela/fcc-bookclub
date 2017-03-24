@@ -11,17 +11,18 @@ html
       +appTitle()
       +topMenu("index")
 
-      p
-        | Join a community of thousands of users and find new books to trade.
-      - if (isAuth) {
+      .bg-well
         p
-          | Go to 
-          a(href='/profile') 'Profile' 
-          | to add books into your profile. From 
-          a(href='/allbooks') 'Books' 
-          | you can view all books added by other users, and you can make trade
-          | requests.
-      - }
+          | Join a community of thousands of users and find new books to trade.
+        - if (isAuth) {
+          p
+            | Go to 
+            a(href='/profile') 'Profile' 
+            | to add books into your profile. From 
+            a(href='/allbooks') 'Books' 
+            | you can view all books added by other users, and you can make trade
+            | requests.
+        - }
       div#main-app
       +appFooter()
 
