@@ -92,7 +92,6 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" flags=S {
    prof-req-list.jsx
    profile.jsx
    tab-select.jsx
-   top.jsx
   }
   common=common {
    ajax-functions.js
