@@ -7,3 +7,4 @@ rules:
     no-css-comments: 0
     brace-style: 0
     leading-zero: 0
+    force-pseudo-nesting: 0
