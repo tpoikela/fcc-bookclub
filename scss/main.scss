@@ -19,6 +19,8 @@ $font-color: $white-shade;
 $bg-color: $black-shade;
 
 $hover-color: lighten($black-shade, 20%);
+$link-color: darken($prim-color, 10%);
+$link-color-visited: darken($link-color, 10%);
 
 $success-color: #1e1;
 
@@ -91,20 +93,11 @@ input {
     color: $compl-color;
 }
 
-button {
-    color: $compl-color;
-
-    :hover {
-        background-color: lighten($black-shade, 30%);
-    }
-}
-
-
 a {
-    color: $prim-color;
+    color: $link-color;
 
     :visited {
-        color: $prim-color;
+        color: $link-color-visited;
     }
 }
 
@@ -228,7 +221,7 @@ ul {
 
     :hover {
         @include bg($hover-color);
-        cursor: cross-hair;
+        cursor: crosshair;
     }
 
 }
