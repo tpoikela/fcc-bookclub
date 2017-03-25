@@ -6,9 +6,7 @@ var babelify = require('babelify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 
-var nodemon = require('gulp-nodemon');
 
-var ctags = require('gulp-ctags');
 
 var jsxDir = './client/jsx';
 
@@ -59,6 +57,22 @@ gulp.task('build', buildTasks, function() {
     console.log('Building the application.');
 });
 
+
+//--------------
+// DEV-section
+//--------------
+
+if (process.env.NODE_ENV !== 'production') {
+
+var nodemon = require('gulp-nodemon');
+var ctags = require('gulp-ctags');
+
+gulp.task('tags', function() {
+  return gulp.src(paths.tags)
+    .pipe(ctags({name: 'tags'}))
+    .pipe(gulp.dest('./'));
+});
+
 /* Task for starting/restarting server on any changes.*/
 gulp.task('serve', function(cb) {
     var called = false;
@@ -86,18 +100,6 @@ gulp.task('serve', function(cb) {
     });
 });
 
-// Bit unusual task. Builds ctags-file for easier src navigation in Vim
-/* gulp.task('tags', function() {
-    console.log('Building ctags for the project.');
-    spawn('ctags', ['-R'].concat(paths.tags));
-}); */
-
-gulp.task('tags', function() {
-  return gulp.src(paths.tags)
-    .pipe(ctags({name: 'tags'}))
-    .pipe(gulp.dest('./'));
-});
-
 var watchDependents = [
   'build-js',
   'tags',
@@ -116,3 +118,4 @@ gulp.task('watch', ['watch-cli', 'serve'], function() {
 
 gulp.task('default', ['watch']);
 
+}
