@@ -10,10 +10,16 @@ class UserController {
         this.appUrl = appUrl;
     }
 
-    /* Used for error reporting. */
-    reportError(fun, err, url) {
+    /* Used for error reporting when API call fails. */
+    reportAPIError(fun, err, url) {
         console.error('userCtrl [ERROR]: ' +
             fun + '(): ' + err + ' url: ' + url);
+    }
+
+    /* Used to report internal errors.*/
+    error(comp, err) {
+        console.error('userCtrl [INT_ER] ' + err);
+        comp.setState({error: err});
     }
 
     /* Sends ajax-get to server to check if user is authenticated. */
@@ -21,7 +27,7 @@ class UserController {
         var url = this.appUrl + '/users/amiauth';
         ajax.get(url, (err, respText) => {
             if (err) {
-                this.reportError('amIAuthenticated', err, url);
+                this.reportAPIError('amIAuthenticated', err, url);
                 cb(err);
             }
             else {
@@ -36,7 +42,7 @@ class UserController {
         var url = this.appUrl + '/users/' + username;
         ajax.get(url, (err, respText) => {
             if (err) {
-                this.reportError('getUserProfileData', err, url);
+                this.reportAPIError('getUserProfileData', err, url);
                 cb(err);
             }
             else {
@@ -51,7 +57,7 @@ class UserController {
         var url = this.appUrl + '/users/update';
         ajax.post(url, contactInfo, (err, respText) => {
             if (err) {
-                this.reportError('updateContactInfo', err, url);
+                this.reportAPIError('updateContactInfo', err, url);
                 cb(err);
             }
             else {
@@ -59,6 +65,33 @@ class UserController {
                 cb(null, data);
             }
         });
+    }
+
+    checkAuthentication(comp) {
+        this.amIAuthenticated( (err, data) => {
+            if (err) {
+                this.error(comp, err);
+            }
+            else {
+                this.getUserInfo(comp, data);
+            }
+        });
+    }
+
+    getUserInfo(comp, authData) {
+        var username = authData.username;
+        if (username) {
+            this.getUserProfileData(username, (err, data) => {
+                if (err) {this.error(err);}
+                else {
+                    comp.setState({
+                        username: authData.username,
+                        userID: authData.userID,
+                        userdata: data
+                    });
+                }
+            });
+        }
     }
 
 }
