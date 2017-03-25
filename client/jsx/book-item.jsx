@@ -10,46 +10,51 @@ class BookItem extends React.Component {
         var book = this.props.book;
         var className = this.props.className || 'book-item';
 
+        if (!book || !book.volumeInfo) {
+            return (<div/>);
+        }
+
         var volInfo = book.volumeInfo;
 
         var thumbnail = null;
         if (volInfo.imageLinks) {
             if (volInfo.imageLinks.smallThumbnail) {
                 thumbnail = (
-                    <img className='img-responsive book-item-thumb'
+                    <img className='book-item-thumb'
                     src={volInfo.imageLinks.smallThumbnail}
                     />);
             }
         }
+        if (thumbnail === null) {
+            thumbnail = <p>No image available</p>;
+        }
 
         var authorText = '';
-        if (volInfo.authors.length > 1) {
-            authorText = volInfo.authors[0] + ' et al.';
-        }
-        else if (volInfo.authors.length === 1) {
-            authorText = volInfo.authors[0];
+        if (volInfo.authors) {
+            if (volInfo.authors.length > 1) {
+                authorText = volInfo.authors[0] + ' et al.';
+            }
+            else if (volInfo.authors.length === 1) {
+                authorText = volInfo.authors[0];
+            }
         }
 
         var info = (
-            <li className='book-item-li'>
-                <ul>
-                    <li>Title: {volInfo.title}</li>
-                    <li>Authors: {authorText}</li>
-                    <li>Published on: {volInfo.publishedDate}</li>
-                    <li>Pages: {volInfo.pageCount}</li>
-                </ul>
-            </li>
+            <ul className='book-item-ul'>
+                <li>Title: {volInfo.title}</li>
+                <li>Authors: {authorText}</li>
+                <li>Published on: {volInfo.publishedDate}</li>
+                <li>Pages: {volInfo.pageCount}</li>
+            </ul>
         );
 
-        if (this.props.hideInfo) {
+        if (this.props.hideInfo === true) {
             info = null;
         }
 
         return (
             <div className={className}>
-                <ul className='book-item-ul'>
-                    <li className='book-item-li'>{thumbnail}</li>
-                </ul>
+                {thumbnail}
                 {info}
             </div>
         );
