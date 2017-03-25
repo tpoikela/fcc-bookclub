@@ -53,7 +53,7 @@ var UserSchema = new Schema({
     tradeReqs: {type: Array}
 
 },
-{collection: 'users'}
+{collection: 'book_users'}
 );
 
 //---------------------------------------------------------------------------
