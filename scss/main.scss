@@ -32,7 +32,7 @@ $top-menu-color: rgba(40, 40, 40, 0.7);
 
 $active-tab-color: lighten($black-shade, 20%);
 
-$border-color: #000;
+$border-color: $white-shade;
 
 $font-step: 4px;
 $font-size-large: 20px;
@@ -54,7 +54,16 @@ $font-size-small: $font-size-medium - $font-step;
 @mixin btn-colors {
     background-color: $black-shade;
     color: $white-shade;
+}
 
+@mixin btn-colors-hover {
+    background-color: lighten($black-shade, 20%);
+    color: $black-shade;
+}
+
+@mixin btn-borders {
+    border: 1px solid $border-color;
+    border-radius: 3px;
 }
 
 @mixin book-item-borders {
@@ -65,21 +74,16 @@ $font-size-small: $font-size-medium - $font-step;
 @mixin book-item-margins {
     margin-bottom: 5px;
     margin-left: 5px;
-    padding: 5px;
+    padding: 10px;
 }
 
 //-----------
 // ELEMENTS
 //-----------
 
-html {
-    font-size: 62.5%;
-}
-
-
 h1 {
     color: $prim-color;
-    font-size: 5rem;
+    font-size: 50px;
     margin-left: 50px;
 }
 
@@ -101,16 +105,30 @@ a {
     }
 }
 
+ul {
+
+    .footer-links {
+        display: inline;
+        padding-left: 0;
+    }
+
+}
+
+//--------------------------------
+// Reusable classes
+//--------------------------------
+
+// Use this for all buttons
+.books-btn {
+    @include btn-colors;
+    @include btn-borders;
+
+    padding: 5px 10px;
+
+}
+
 .bg-well {
     @include text-box-bx;
-}
-
-.main {
-    @include text-box-bx;
-}
-
-.menu {
-    display: inline;
 }
 
 .top-menu {
@@ -123,26 +141,6 @@ a {
     }
 }
 
-ul {
-
-    .footer-links {
-        display: inline;
-        padding-left: 0;
-    }
-
-    .top-menu {
-
-        a {
-            color: $prim-color;
-
-            :visited {
-                color: $prim-color;
-            }
-
-        }
-    }
-
-}
 
 .wait-search-icon {
     margin-top: 5px;
@@ -178,24 +176,8 @@ ul {
 //-------------------
 
 .book-item-thumb {
-
+    margin: auto 0;
 }
-
-.book-item-ul {
-    display: flex;
-    padding-top: 5px;
-}
-
-.book-item-li {
-    display: inline;
-
-    ul {
-        li {
-            list-style-type: none;
-        }
-    }
-}
-
 
 //-----------------
 // BOOKS LIST VIEW
@@ -207,13 +189,13 @@ ul {
     justify-content: flex-start;
 }
 
+// Item shown in Books list (not used in profile)
 .books-book-item {
     @include text-box-bx;
     @include book-item-borders;
     @include book-item-margins;
 
     flex: 1;
-    margin: auto;
 
     .book-item-li {
         font-size: $font-size-small;
@@ -221,24 +203,11 @@ ul {
 
     :hover {
         @include bg($hover-color);
-        cursor: crosshair;
     }
 
 }
 
-
 .books-tab {
-}
-
-.books-btn {
-    @include btn-colors;
-
-    border: 1px solid $white-shade;
-    border-radius: 3px;
-
-    /*:hover {
-        background-color: lighten($black-shade, 10%);
-    }*/
 }
 
 
@@ -255,9 +224,8 @@ ul {
 }
 
 .prof-book-list {
-    display: flex;
-    flex-wrap: wrap;
-
+    // display: flex;
+    // flex-wrap: wrap;
 }
 
 .prof-book-item {
@@ -265,15 +233,19 @@ ul {
     @include book-item-borders;
     @include book-item-margins;
 
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+    // flex: 1;
+    // flex-direction: column;
 
     font-size: $font-size-small;
-    justify-content: flex-end;
+    //justify-content: flex-end;
 
-    button {
+    /*button {
         align-self: flex-start;
+    }*/
+
+    .book-item {
+        display: flex;
+
     }
 }
 
