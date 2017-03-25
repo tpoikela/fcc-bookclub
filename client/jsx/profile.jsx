@@ -276,7 +276,6 @@ class ProfileTop extends React.Component {
         var body = this.getCompBody();
         return (
             <div className='profile-info'>
-                <div className='main'>
                 <h2>Username: {username}</h2>
                 <TabSelect
                     onClickShowAddBooks={this.onClickShowAddBooks}
@@ -284,7 +283,6 @@ class ProfileTop extends React.Component {
                     onClickShowProfile={this.onClickShowProfile}
                     tabs={this.state.tabs}
                 />
-                </div>
                 {body}
             </div>
         );
