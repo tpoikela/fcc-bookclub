@@ -47,7 +47,9 @@ class ProfileTop extends React.Component {
         this.modalId = 'modal-view-req';
 
         this.state = {
+            addBookInProgress: false,
             bookForReq: null,
+            deleteBookInProgress: false,
             error: null,
             input: {},
             reqBooks: [],
@@ -167,29 +169,37 @@ class ProfileTop extends React.Component {
 
 	/* Adds one book for the user. */
     addBook(book, index) {
-        this.log('Book ' + book.volumeInfo.title + ' will be added.');
-        var bookData = {username: this.state.username,
-            book: book};
-        this.bookCtrl.addBook(bookData, (err, resp) => {
-                if (err) {this.error(err);}
-                else {
-                    this.jsonLog('addBook response data', resp);
-                    this.state.searchResults[index].added = true;
-                    this.getUserInfo();
-                }
-        });
+        if (!this.state.addBookInProgress) {
+            this.setState({addBookInProgress: true});
+            this.log('Book ' + book.volumeInfo.title + ' will be added.');
+            var bookData = {username: this.state.username,
+                book: book};
+            this.bookCtrl.addBook(bookData, (err, resp) => {
+                    if (err) {this.error(err);}
+                    else {
+                        this.jsonLog('addBook response data', resp);
+                        this.state.searchResults[index].added = true;
+                        this.getUserInfo();
+                    }
+                this.setState({addBookInProgress: false});
+            });
+        }
     }
 
     /* Deletes one book.*/
     deleteBook(bookData) {
-        this.jsonLog('deleteBook sending data', bookData);
-        this.bookCtrl.deleteBook(bookData, (err, resp) => {
-            if (err) {this.error(err);}
-            else {
-                this.jsonLog('deleteBook response data', resp);
-                this.getUserInfo();
-            }
-        });
+        if (!this.state.deleteBookInProgress) {
+            this.setState({deleteBookInProgress: true});
+            this.jsonLog('deleteBook sending data', bookData);
+            this.bookCtrl.deleteBook(bookData, (err, resp) => {
+                if (err) {this.error(err);}
+                else {
+                    this.jsonLog('deleteBook response data', resp);
+                    this.getUserInfo();
+                }
+                this.setState({deleteBookInProgress: false});
+            });
+        }
     }
 
     /* Searches for a book to add from the server.*/
