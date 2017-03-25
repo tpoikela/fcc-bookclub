@@ -48,8 +48,7 @@ class ProfileBookItem extends React.Component {
         return (
             <div className='prof-book-item'>
                 <BookItem book={book}
-                    hideInfo={true}
-
+                    hideInfo={false}
                 />
                 <button
                     className='books-btn'
