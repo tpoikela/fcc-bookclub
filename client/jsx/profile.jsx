@@ -135,25 +135,6 @@ class ProfileTop extends React.Component {
         this.setState({input: input});
     }
 
-    /* Checks that user is properly authorised. */
-    checkAuthentication() {
-        this.userCtrl.amIAuthenticated( (err, data) => {
-            if (err) {
-                this.error(err);
-            }
-            else {
-                this.setState({
-                    username: data.username,
-                    userID: data.userID
-                });
-            }
-
-            this.log('DEBUG: state.userID: ' + this.state.userID);
-            this.getUserInfo();
-
-        });
-    }
-
     /** Get user info from the server.
      * @returns {undefined}
      * */
@@ -170,7 +151,7 @@ class ProfileTop extends React.Component {
     }
 
     componentDidMount() {
-        this.checkAuthentication();
+        this.userCtrl.checkAuthentication(this);
         this.getAllBooks();
     }
 
