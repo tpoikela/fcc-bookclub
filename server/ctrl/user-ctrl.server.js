@@ -1,4 +1,3 @@
-
 'use strict';
 
 // Used for MongoDB access
@@ -100,7 +99,6 @@ module.exports = function(path) {
                     return cb(err);
                 }
                 else if (user) {
-                    console.log('SERVER WILL RETURN: ' + JSON.stringify(user));
                     return cb(null, user);
                 }
                 else {
