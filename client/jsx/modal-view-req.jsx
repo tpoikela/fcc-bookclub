@@ -41,7 +41,7 @@ class ModalViewReq extends React.Component {
             var selectBook = this.selectBookForReq.bind(this, item);
             console.log('Item is ' + JSON.stringify(item));
             return (
-                <div key={index}>
+                <div className='modal-req-book-list' key={index}>
                     <BookItem book={item} />
                     <button onClick={selectBook}>Select</button>
                 </div>
