@@ -56,9 +56,9 @@ mixin topMenu(title)
     ul.top-menu
       li
         a.menu(href="/") Home
+      li
+        a.menu(href="/allbooks") Books
       - if (isAuth) {
-        li
-          a.menu(href="/allbooks") Books
         li
           a.menu(href="/profile") Profile
         li
