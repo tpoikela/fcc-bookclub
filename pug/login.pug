@@ -18,7 +18,7 @@ html
       - if (!failed) {
         p#pw-login-msg Please enter username and password:
       - } else {
-        p#pw-login-msg.text-error Login failed. Please retry.
+        p#pw-login-msg.text-danger Login failed. Please retry.
       - }
 
       form(method="POST" action="/auth/userlogin")
@@ -33,7 +33,7 @@ html
           input#userPasswordField.form-control(
             name="password" type="password" placeholder="Password")
 
-        button#login-btn.btn-night(type="submit") Login
+        button#login-btn.books-btn(type="submit") Login
 
       br
       p No account yet? Then 
