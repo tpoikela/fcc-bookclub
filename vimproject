@@ -82,6 +82,7 @@ fcc-bookclub=~/git/fcc-bookclub CD=. filter="*" flags=S {
    app.jsx
    book-item.jsx
    books-top.jsx
+   button.jsx
    contact-info.jsx
    contact-input.jsx
    modal-header.jsx
