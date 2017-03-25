@@ -100,7 +100,7 @@ input {
 a {
     color: $link-color;
 
-    :visited {
+    a:visited {
         color: $link-color-visited;
     }
 }
@@ -114,6 +114,7 @@ ul {
 
 }
 
+
 //--------------------------------
 // Reusable classes
 //--------------------------------
@@ -124,7 +125,10 @@ ul {
     @include btn-borders;
 
     padding: 5px 10px;
+}
 
+.books-btn:hover {
+    @include btn-colors-hover;
 }
 
 .bg-well {
@@ -141,10 +145,13 @@ ul {
     }
 }
 
-
 .wait-search-icon {
     margin-top: 5px;
 }
+
+//-------------------------------
+// Selection tab in the profile
+//-------------------------------
 
 .tab-sel-active {
     background-color: $active-tab-color;
@@ -155,14 +162,16 @@ ul {
 .tab-sel-inactive {
     border-radius: 10px 10px 0 0;
     color: $black-shade;
-
-    :hover {
-        background-color: $n1-light;
-        color: $prim-color;
-    }
-
 }
 
+.tab-sel-inactive:hover {
+    background-color: $n1-light;
+    color: $white-shade;
+}
+
+//-------------------------------
+// Text styling
+//-------------------------------
 .text-success {
     color: $success-color;
 }
@@ -183,11 +192,13 @@ ul {
 // BOOKS LIST VIEW
 //-----------------
 
+// Use this when multiple books are shown on the same row
 .book-list-flex {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
 }
+
 
 // Item shown in Books list (not used in profile)
 .books-book-item {
@@ -216,16 +227,12 @@ ul {
 //--------------
 
 .prof-req-list-div {
-
 }
 
 .prof-req-list-top {
-    // @include text-box-bx;
 }
 
 .prof-book-list {
-    // display: flex;
-    // flex-wrap: wrap;
 }
 
 .prof-book-item {
@@ -233,21 +240,15 @@ ul {
     @include book-item-borders;
     @include book-item-margins;
 
-    // flex: 1;
-    // flex-direction: column;
-
     font-size: $font-size-small;
-    //justify-content: flex-end;
-
-    /*button {
-        align-self: flex-start;
-    }*/
 
     .book-item {
         display: flex;
 
     }
 }
+
+
 
 .prof-req-list-ul {
 
