@@ -217,11 +217,8 @@ ul {
     @include book-item-borders;
     @include book-item-margins;
 
-    display: flex;
     flex: 1;
-    flex-direction: column;
-    justify-content: flex-end;
-
+    width: 33%;
 
     .book-item-li {
         font-size: $font-size-small;
@@ -255,7 +252,7 @@ ul {
 }
 
 .prof-req-list-top {
-    @include text-box-bx;
+    // @include text-box-bx;
 }
 
 .prof-book-list {
