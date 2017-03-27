@@ -75,6 +75,7 @@ class BooksTop extends React.Component {
     render() {
         var bookList = this.getBookListRendered();
         var msg = this.getMessage();
+        var bookModal = this.getBookModal();
 
         return (
             <div className='books-top'>
@@ -82,6 +83,7 @@ class BooksTop extends React.Component {
                 <div className='book-list-flex'>
                     {bookList}
                 </div>
+                {bookModal}
             </div>
 
         );
@@ -137,6 +139,8 @@ class BooksTop extends React.Component {
         this.setState({msg: msg});
     }
 
+    /* Generates markup for message which is shown to the user. This depends
+     * on login status, and whether user has added any books.*/
     getMessage() {
         var userdata = this.state.userdata;
         var msg = [<p key={0}>{this.state.msg}</p>];
@@ -163,6 +167,11 @@ class BooksTop extends React.Component {
         }
 
         return msg;
+    }
+
+    /* Returns the markup for modal showing info of the clicked book. */
+    getBookModal() {
+        return <div/>;
     }
 
 }

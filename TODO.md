@@ -25,12 +25,12 @@ List of user features:
     - [X] Modify User data when accepted request arrives
     - [ ] Modify Book data when accepted request arrives
   9. [ ] A user can search all added books by name.
-  10. [ ] User can see covers of the books in all views
+  10. [X] User can see covers of the books in all views
     - [X] Hook up an external API (Google books)
     - [X] Show book covers on profile view
     - [X] Show book covers on all book view
-    - [ ] Show book covers on trade request view
-  11. [ ] Anonymous users can view all books
+    - [X] Show book covers on trade request view
+  11. [X] Anonymous users can view all books
   12. [X] User can see About page with additional info
   13. [ ] When user clicks "Add to Profile" in Profile->Add Book, there is some
       feedback to notify the user of successful add.
@@ -42,18 +42,18 @@ List of user features:
 SCSS TODO-list:
 ---------------
 
-  1. [ ] Pug-views
-    - [ ] index
-    - [ ] login
-    - [ ] login failed
-    - [ ] signup
-    - [ ] signup success
-    - [ ] about
-  2. [ ] React-views
-    - [ ] Profile
-    - [ ] AddBooks
-    - [ ] ContactInfo
-    - [ ] TradeRequest-modal
+  1. [X] Pug-views
+    - [X] index
+    - [X] login
+    - [X] login failed
+    - [X] signup
+    - [X] signup success
+    - [X] about
+  2. [X] React-views
+    - [X] Profile
+    - [X] AddBooks
+    - [X] ContactInfo
+    - [X] TradeRequest-modal
 
 The following Database schemas have been setup:
 
